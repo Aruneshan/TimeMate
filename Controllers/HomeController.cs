@@ -9,9 +9,11 @@ namespace TimeMate.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory)
         {
+            _httpClientFactory = httpClientFactory;
             _logger = logger;
         }
 

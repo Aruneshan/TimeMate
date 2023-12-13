@@ -19,14 +19,12 @@ namespace TimeMate.Controllers
             _context = context;
         }
 
-        // GET: Leave
         public async Task<IActionResult> Index()
         {
             var timeMateContext = _context.leaveRequests.Include(l => l.Employee);
             return View(await timeMateContext.ToListAsync());
         }
 
-        // GET: Leave/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.leaveRequests == null)

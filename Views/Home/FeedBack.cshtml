@@ -1,0 +1,17 @@
+﻿@model Feedback
+
+<form method="post" asp-action="SubmitFeedback">
+    <div>
+        <label>Name:</label>
+        <input type="text" asp-for="Name" />
+    </div>
+    <div>
+        <label>Email:</label>
+        <input type="email" asp-for="Email" />
+    </div>
+    <div>
+        <label>Message:</label>
+        <textarea asp-for="Message"></textarea>
+    </div>
+    <button type="submit">Submit Feedback</button>
+</form>

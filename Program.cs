@@ -57,6 +57,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseSession();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 
 
 app.UseRouting();
