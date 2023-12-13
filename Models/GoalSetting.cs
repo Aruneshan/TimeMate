@@ -9,16 +9,16 @@ namespace TimeMate.Models
 
             [Required]
             [StringLength(255)]
-            public string Description { get; set; }
+            public string description { get; set; }
 
             [DataType(DataType.Date)]
             [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-            public DateTime? DueDate { get; set; }
+            public DateTime? dueDate { get; set; }
 
-            public bool IsComplete { get; set; }
+            public bool isComplete { get; set; }
 
-            public string AssignedTo { get; set; }
-        public string AssignedBy { set; get; }
+            public string assignedTo { get; set; }
+        public string assignedBy { set; get; }
 
     }
 }

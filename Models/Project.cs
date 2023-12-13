@@ -9,9 +9,9 @@ namespace TimeMate.Models
     public partial class Project
     {
         [Key]
-        public int ProjectId { get; set; }
+        public int projectId { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string description { get; set; }
         [Display(Name = "Date Created")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime DateCreated { get; set; }

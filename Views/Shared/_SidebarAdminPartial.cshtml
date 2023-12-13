@@ -1,7 +1,5 @@
 
-<ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
-
-
+<ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" Id="accordionSidebar">
     
     <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-controller="Home" asp-action="Index">
         <i class="fa fa-home fa-fw"></i>
@@ -9,9 +7,7 @@
 
     </a>
 
-
     <hr class="sidebar-divider my-0">
-
     
     <li class="nav-item active">
         <a class="nav-link" asp-controller="User" asp-action="AdminDashboard">
@@ -42,11 +38,36 @@
             <span> WorkSpace</span>
         </a>
     </li>
+
+    <button Id="openCalendarButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#calendarModal">Open Calendar</button>
+
+    <!-- Modal to display the calendar view -->
+    <div class="modal fade" Id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="calendarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" Id="calendarModalLabel">Timesheet Calendar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+@*    <li class="nav-item">
+        <a class="nav-link" asp-action="Index" asp-controller="Admin">
+
+            <i class="fa fa-cog"></i>
+            <span> Users</span>
+        </a>
+*@
+    </li>
+
+
     <hr class="sidebar-divider d-none d-md-block"/>
 
 
     <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        <button class="rounded-circle border-0" Id="sidebarToggle"></button>
     </div>
 
 </ul>

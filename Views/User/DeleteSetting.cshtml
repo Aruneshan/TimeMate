@@ -31,16 +31,16 @@
                             @Html.DisplayFor(model => model.EndDay)
                         </dd>
                         <dt class="col-sm-4">
-                            @Html.DisplayNameFor(model => model.StartDate)
+                            @Html.DisplayNameFor(model => model.startDate)
                         </dt>
                         <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.StartDate)
+                            @Html.DisplayFor(model => model.startDate)
                         </dd>
                     </dl>
 
-                    <form asp-action="DeleteSettingConfirmed" asp-route-id="@Model.WeekSettingId">
+                    <form asp-action="DeleteSettingConfirmed" asp-route-Id="@Model.WeekSettingId">
                         <input type="submit" value="Delete" class="btn btn-danger" /> |
-                        <a asp-action="WeekSetting" asp-route-id="@Model.WorkspaceId">Back to Week Setting</a>
+                        <a asp-action="WeekSetting" asp-route-Id="@Model.WorkspaceId">Back to Week Setting</a>
                     </form>
                 </div>
             </div>

@@ -1,18 +1,10 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
-using System;
-using System.Collections.Generic;
+﻿#nullable disable
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,10 +12,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Build.Framework;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using TimeMate.Areas.Identity.Data;
-
+using TimeMate.Models;
 
 namespace TimeMate.Areas.Identity.Pages.Account
 {
@@ -36,6 +27,7 @@ namespace TimeMate.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager <IdentityRole> _roleManager;
+        private readonly smtpSettings _smtpSettings;
 
         public RegisterModel(
             UserManager<TimeMateUser> userManager,
@@ -43,6 +35,7 @@ namespace TimeMate.Areas.Identity.Pages.Account
             SignInManager<TimeMateUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
+            IOptions<smtpSettings> smtpSettings,
             RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
@@ -52,6 +45,7 @@ namespace TimeMate.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _smtpSettings = smtpSettings.Value;
         }
 
         [BindProperty]
@@ -74,14 +68,10 @@ namespace TimeMate.Areas.Identity.Pages.Account
             [System.ComponentModel.DataAnnotations.Required]
             [EmailAddress(ErrorMessage = "Invalid email address.")]
             [Display(Name = "Email")]
-            [RegularExpression(@"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
-            ErrorMessage = "Invalid email address.")]
             public string Email { get; set; }
 
             [System.ComponentModel.DataAnnotations.Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]
-            [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$",
-                ErrorMessage = "The password does not meet the required criteria.")]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
@@ -152,7 +142,7 @@ namespace TimeMate.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await SendEmailAsync(Input.Email, "Confirm your email",
+                    SendEmail(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
@@ -175,29 +165,29 @@ namespace TimeMate.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private async Task<bool> SendEmailAsync(string email, string subject, string confirmLink)
+        private bool SendEmail(string email, string Subject, string confirmLink)
         {
             try
             {
                 MailMessage message = new MailMessage();
                 SmtpClient smtp = new SmtpClient();
-                message.From = new MailAddress("aruneshan04@gmail.c0m");
+                message.From = new MailAddress(_smtpSettings.fromEmail);
                 message.To.Add(email);
-                message.Subject = subject;
+                message.Subject = Subject;
                 message.IsBodyHtml = true;
                 message.Body = confirmLink;
 
-                smtp.Port = 587;
-                smtp.Host = "smtp.gmail.com";
+                smtp.Port = _smtpSettings.smtpPort;
+                smtp.Host = _smtpSettings.smtpHost;
 
-                smtp.EnableSsl = true;
-                smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new NetworkCredential("aruneshan04@gmail.com", "cwrnolswfzuhauox");
+                smtp.EnableSsl = _smtpSettings.enableSsl;
+                smtp.UseDefaultCredentials = _smtpSettings.useDefaultCredentials;
+                smtp.Credentials = new NetworkCredential(_smtpSettings.userName, _smtpSettings.password);
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtp.Send(message);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

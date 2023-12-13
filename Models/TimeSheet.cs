@@ -16,14 +16,14 @@ namespace TimeMate.Models
         public string Task { get; set; }
         public string TaskType { get; set; }
         public int HoursSpent { get; set; }
-        public string Status { get; set; }
+        public string status { get; set; }
 
         [ForeignKey("TimeMateUser")]
         public string EmployeeId { get; set; }
         public TimeMateUser TimeMateUser { get; set;}
 
         [ForeignKey("Project")]
-        public int ProjectId { get; set; }
+        public int projectId { get; set; }
         public Project Project { get; set; }
     }
 }

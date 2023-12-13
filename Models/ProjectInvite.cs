@@ -9,9 +9,9 @@ namespace TimeMate.Models
 {
     public partial class ProjectInvite
     {
-        public int ProjectId { get; set; }
+        public int projectId { get; set; }
         public string EmployeeId { get; set; }
-        public string Status { get; set; }
+        public string status { get; set; }
         public int InviteId { get; set; }
         public DateTime InviteDate { get; set; }
 

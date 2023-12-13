@@ -38,7 +38,7 @@
                                         <th>
                                             Project Name
                                         </th>
-                                        <th>Project Description</th>
+                                        <th>Project description</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -49,10 +49,10 @@
                                             <td>@item.ProjectName</td>
                                             <td>@item.ProjectDescription</td>
                                             <td>
-                                                <a style="float:right" asp-action="FillTimeSheet" class="btn btn-outline-primary" asp-route-id="@item.ProjectId">Fill</a>
-                                                <a style="float:right; margin-right:5px" asp-action="ShowTimeSheet" class="btn btn-outline-primary" asp-route-id="@item.ProjectId">Timesheet</a>
-                                                <a style="float:right; margin-right:5px" asp-action="ShowTimeSheetViewOnly" class="btn btn-outline-primary" asp-route-id="@item.ProjectId">Status</a>
-                                                <a onclick="return confirm('Are you sure you wanna request to change this project?');" style="float:right; margin-right:5px" asp-action="RequestToChangeProject" class="btn btn-outline-primary" asp-route-id="@item.ProjectId">Request</a>
+                                                <a style="float:right" asp-action="FillTimeSheet" class="btn btn-outline-primary" asp-route-Id="@item.projectId">Fill</a>
+                                                <a style="float:right; margin-right:5px" asp-action="ShowTimeSheet" class="btn btn-outline-primary" asp-route-Id="@item.projectId">Timesheet</a>
+                                                <a style="float:right; margin-right:5px" asp-action="ShowTimeSheetViewOnly" class="btn btn-outline-primary" asp-route-Id="@item.projectId">status</a>
+                                                <a onclick="return confirm('Are you sure you wanna request to change this Project?');" style="float:right; margin-right:5px" asp-action="RequestToChangeProject" class="btn btn-outline-primary" asp-route-Id="@item.projectId">Request</a>
                                             </td>
                                         </tr>
                                     }

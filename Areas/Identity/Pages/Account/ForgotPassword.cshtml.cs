@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using TimeMate.Areas.Identity.Data;
+using TimeMate.Models;
 
 namespace TimeMate.Areas.Identity.Pages.Account
 {
@@ -23,11 +24,13 @@ namespace TimeMate.Areas.Identity.Pages.Account
     {
         private readonly UserManager<TimeMateUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly smtpSettings _smtpSettings;
 
-        public ForgotPasswordModel(UserManager<TimeMateUser> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<TimeMateUser> userManager, IEmailSender emailSender, smtpSettings smtpSettings)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            _smtpSettings = smtpSettings;
         }
 
         [BindProperty]
@@ -36,7 +39,8 @@ namespace TimeMate.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [EmailAddress]
+            [RegularExpression(@"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
+            ErrorMessage = "Invalid email address.")]
             public string Email { get; set; }
         }
 
@@ -61,7 +65,7 @@ namespace TimeMate.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                await SendEmailAsync(
+                SendEmail(
                     Input.Email,
                     "Reset Password",
                     $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
@@ -69,29 +73,29 @@ namespace TimeMate.Areas.Identity.Pages.Account
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
 
-            async Task<bool> SendEmailAsync(string email, string subject, string confirmLink)
+            bool SendEmail(string email, string Subject, string confirmLink)
             {
                 try
                 {
                     MailMessage message = new MailMessage();
                     SmtpClient smtp = new SmtpClient();
-                    message.From = new MailAddress("aruneshan04@gmail.c0m");
+                    message.From = new MailAddress(_smtpSettings.fromEmail);
                     message.To.Add(email);
-                    message.Subject = subject;
+                    message.Subject = Subject;
                     message.IsBodyHtml = true;
                     message.Body = confirmLink;
 
-                    smtp.Port = 587;
-                    smtp.Host = "smtp.gmail.com";
+                    smtp.Port = _smtpSettings.smtpPort;
+                    smtp.Host = _smtpSettings.smtpHost;
 
-                    smtp.EnableSsl = true;
-                    smtp.UseDefaultCredentials = false;
-                    smtp.Credentials = new NetworkCredential("aruneshan04@gmail.com", "cwrnolswfzuhauox");
+                    smtp.EnableSsl = _smtpSettings.enableSsl;
+                    smtp.UseDefaultCredentials = _smtpSettings.useDefaultCredentials;
+                    smtp.Credentials = new NetworkCredential(_smtpSettings.userName, _smtpSettings.password);
                     smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                     smtp.Send(message);
                     return true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return false;
                 }

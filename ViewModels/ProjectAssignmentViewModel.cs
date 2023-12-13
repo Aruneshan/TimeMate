@@ -11,6 +11,8 @@ namespace TimeMate.ViewModels
     {
         [Display(Name = "Search Email")]
         [Required]
-        public string SearchEmail { get; set; }
+        public string searchEmail { get; set; }
+
+        public string searchKeyword { get; set; }
     }
 }

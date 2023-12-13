@@ -10,6 +10,6 @@ namespace TimeMate.ViewModels
     {
         public string ProjectName { get; set; }
         public string ProjectDescription { get; set; }
-        public int ProjectId { get; set; }
+        public int projectId { get; set; }
     }
 }

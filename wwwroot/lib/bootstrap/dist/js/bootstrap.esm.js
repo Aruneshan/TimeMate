@@ -3435,7 +3435,7 @@ const allowedAttribute = (attr, allowedAttributeList) => {
 
 const DefaultAllowlist = {
   // Global attributes allowed on any supplied element below.
-  '*': ['class', 'dir', 'id', 'lang', 'role', ARIA_ATTRIBUTE_PATTERN],
+  '*': ['class', 'dir', 'Id', 'lang', 'role', ARIA_ATTRIBUTE_PATTERN],
   a: ['target', 'href', 'title', 'rel'],
   area: [],
   b: [],
@@ -3703,7 +3703,7 @@ class Tooltip extends BaseComponent {
 
     const tip = this.getTipElement();
     const tipId = getUID(this.constructor.NAME);
-    tip.setAttribute('id', tipId);
+    tip.setAttribute('Id', tipId);
 
     this._element.setAttribute('aria-describedby', tipId);
 

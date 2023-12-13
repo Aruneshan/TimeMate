@@ -9,11 +9,11 @@
     {
         Layout = "~/Views/Layouts/_AdminLayout.cshtml";
     }
-    else if (User.IsInRole("Employee"))
+    else if (User.IsInRole("employee"))
     {
         Layout = "~/Views/Layouts/_EmployeeLayout.cshtml";
     }
-    else
+    else /*if(User.IsInRole("Manager"))*/
     {
         Layout = "~/Views/Layouts/_ManagerLayout.cshtml";
     }
@@ -31,14 +31,14 @@
                         <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId"></select>
                     </div>
                     <div class="form-group">
-                        <label asp-for="StartDate" class="control-label"></label>
-                        <input asp-for="StartDate" class="form-control" />
-                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                        <label asp-for="startDate" class="control-label"></label>
+                        <input asp-for="startDate" class="form-control" />
+                        <span asp-validation-for="startDate" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="EndDate" class="control-label"></label>
-                        <input asp-for="EndDate" class="form-control" />
-                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                        <label asp-for="endDate" class="control-label"></label>
+                        <input asp-for="endDate" class="form-control" />
+                        <span asp-validation-for="endDate" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Reason" class="control-label"></label>
@@ -46,11 +46,11 @@
                         <span asp-validation-for="Reason" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Status" class="control-label"></label>
-                        <select asp-for="Status" class="form-control">
+                        <label asp-for="status" class="control-label"></label>
+                        <select asp-for="status" class="form-control">
                             <option>Pending</option>
                         </select>
-                        <span asp-validation-for="Status" class="text-danger"></span>
+                        <span asp-validation-for="status" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">

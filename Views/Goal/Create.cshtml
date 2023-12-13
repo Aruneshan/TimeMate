@@ -9,7 +9,7 @@
     {
         Layout = "~/Views/Layouts/_AdminLayout.cshtml";
     }
-    else if (User.IsInRole("Employee"))
+    else if (User.IsInRole("employee"))
     {
         Layout = "~/Views/Layouts/_EmployeeLayout.cshtml";
     }
@@ -24,28 +24,28 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DueDate" class="control-label"></label>
-                <input asp-for="DueDate" class="form-control" />
-                <span asp-validation-for="DueDate" class="text-danger"></span>
+                <label asp-for="dueDate" class="control-label"></label>
+                <input asp-for="dueDate" class="form-control" />
+                <span asp-validation-for="dueDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AssignedTo" class="control-label"></label>
-                <input asp-for="AssignedTo" class="form-control" />
-                <span asp-validation-for="AssignedTo" class="text-danger"></span>
+                <label asp-for="assignedTo" class="control-label"></label>
+                <input asp-for="assignedTo" class="form-control" />
+                <span asp-validation-for="assignedTo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AssignedBy" class="control-label"></label>
-                <input asp-for="AssignedBy" class="form-control" />
-                <span asp-validation-for="AssignedBy" class="text-danger"></span>
+                <label asp-for="assignedBy" class="control-label"></label>
+                <input asp-for="assignedBy" class="form-control" />
+                <span asp-validation-for="assignedBy" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsComplete" /> @Html.DisplayNameFor(model => model.IsComplete)
+                    <input class="form-check-input" asp-for="isComplete" /> @Html.DisplayNameFor(model => model.isComplete)
                 </label>
             </div>
 

@@ -20,7 +20,7 @@ namespace TimeMate.Models
         [ForeignKey("Workspace")]
         public int WorkspaceId { get; set; }
         public WorkSpace Workspace { get; set; }
-        //public int ProjectId { get; set; }
+        //public int projectId { get; set; }
         //public Project Project { get; set; }
 
     }

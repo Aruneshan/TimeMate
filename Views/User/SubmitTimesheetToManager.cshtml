@@ -16,7 +16,7 @@
                 <th>Task</th>
                 <th>Task Type</th>
                 <th>Hours Spent</th>
-                <th>Status</th>
+                <th>status</th>
             </tr>
         </thead>
         <tbody>
@@ -27,9 +27,9 @@
                     <td>@Html.DisplayFor(modelItem => item.Task)</td>
                     <td>@Html.DisplayFor(modelItem => item.TaskType)</td>
                     <td>@Html.DisplayFor(modelItem => item.HoursSpent)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                    <td>@Html.DisplayFor(modelItem => item.status)</td>
                     <td>@Html.HiddenFor(modelItem => item.TimeSheetId)</td>
-                    <td>@Html.HiddenFor(modelItem => item.Status)</td>
+                    <td>@Html.HiddenFor(modelItem => item.status)</td>
                 </tr>
             }
         </tbody>

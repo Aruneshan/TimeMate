@@ -12,7 +12,7 @@ namespace TimeMate.ViewModels
         [Required]
         public string Name { get; set; }
         [Required]
-        public string Description { get; set; }
+        public string description { get; set; }
 
         public DateTime DateCreated { get; set; }
         public SharedData SharedData { get; set; }

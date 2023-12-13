@@ -635,13 +635,13 @@
   var idPool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   function nextUniqueId() {
     var size = 12;
-    var id = '';
+    var Id = '';
 
     while (size-- > 0) {
-      id += idPool[Math.random() * 62 | 0];
+      Id += idPool[Math.random() * 62 | 0];
     }
 
-    return id;
+    return Id;
   }
   function toArray(obj) {
     var array = [];
@@ -780,7 +780,7 @@
     var maskTag = {
       tag: 'mask',
       attributes: _objectSpread({}, ALL_SPACE, {
-        id: maskId,
+        Id: maskId,
         maskUnits: 'userSpaceOnUse',
         maskContentUnits: 'userSpaceOnUse'
       }),
@@ -791,7 +791,7 @@
       children: [{
         tag: 'clipPath',
         attributes: {
-          id: clipId
+          Id: clipId
         },
         children: [maskPath]
       }, maskTag]
@@ -884,7 +884,7 @@
         children = _ref.children,
         attributes = _ref.attributes,
         symbol = _ref.symbol;
-    var id = symbol === true ? "".concat(prefix, "-").concat(config.familyPrefix, "-").concat(iconName) : symbol;
+    var Id = symbol === true ? "".concat(prefix, "-").concat(config.familyPrefix, "-").concat(iconName) : symbol;
     return [{
       tag: 'svg',
       attributes: {
@@ -893,7 +893,7 @@
       children: [{
         tag: 'symbol',
         attributes: _objectSpread({}, attributes, {
-          id: id
+          Id: Id
         }),
         children: children
       }]
@@ -940,7 +940,7 @@
     if (title) content.children.push({
       tag: 'title',
       attributes: {
-        id: content.attributes['aria-labelledby'] || "title-".concat(nextUniqueId())
+        Id: content.attributes['aria-labelledby'] || "title-".concat(nextUniqueId())
       },
       children: [title]
     });
@@ -1103,16 +1103,16 @@
    *
    * A fast object `.reduce()` implementation.
    *
-   * @param  {Object}   subject      The object to reduce over.
+   * @param  {Object}   Subject      The object to reduce over.
    * @param  {Function} fn           The reducer function.
-   * @param  {mixed}    initialValue The initial value for the reducer, defaults to subject[0].
+   * @param  {mixed}    initialValue The initial value for the reducer, defaults to Subject[0].
    * @param  {Object}   thisContext  The context for the reducer.
    * @return {mixed}                 The final result.
    */
 
 
-  var reduce = function fastReduceObject(subject, fn, initialValue, thisContext) {
-    var keys = Object.keys(subject),
+  var reduce = function fastReduceObject(Subject, fn, initialValue, thisContext) {
+    var keys = Object.keys(Subject),
         length = keys.length,
         iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
         i,
@@ -1121,7 +1121,7 @@
 
     if (initialValue === undefined) {
       i = 1;
-      result = subject[keys[0]];
+      result = Subject[keys[0]];
     } else {
       i = 0;
       result = initialValue;
@@ -1129,7 +1129,7 @@
 
     for (; i < length; i++) {
       key = keys[i];
-      result = iterator(result, subject[key], key, subject);
+      result = iterator(result, Subject[key], key, Subject);
     }
 
     return result;

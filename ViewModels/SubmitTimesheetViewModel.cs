@@ -17,8 +17,8 @@ namespace TimeMate.ViewModels
         public string Task { get; set; }
         public string TaskType { get; set; }
         public int HoursSpent { get; set; }
-        public string Status { get; set; }
-        public int ProjectId { get; set; }
+        public string status { get; set; }
+        public int projectId { get; set; }
         public int EMployeeId { get; set; }
 
 

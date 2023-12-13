@@ -10,7 +10,7 @@
     {
         Layout = "~/Views/Layouts/_AdminLayout.cshtml";
     }
-    else if (User.IsInRole("Employee"))
+    else if (User.IsInRole("employee"))
     {
         Layout = "~/Views/Layouts/_EmployeeLayout.cshtml";
     }
@@ -32,10 +32,10 @@
                 @Html.DisplayFor(model => model.Name)
             </dd>
             <dt>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.description)
             </dt>
             <dd>
-                @Html.DisplayFor(model => model.Description)
+                @Html.DisplayFor(model => model.description)
             </dd>
             <dt>
                 Requested By

@@ -1197,7 +1197,7 @@
       this._isTransitioning = false;
       this._element = element;
       this._config = this._getConfig(config);
-      this._triggerArray = [].slice.call(document.querySelectorAll("[data-toggle=\"collapse\"][href=\"#" + element.id + "\"]," + ("[data-toggle=\"collapse\"][data-target=\"#" + element.id + "\"]")));
+      this._triggerArray = [].slice.call(document.querySelectorAll("[data-toggle=\"collapse\"][href=\"#" + element.Id + "\"]," + ("[data-toggle=\"collapse\"][data-target=\"#" + element.Id + "\"]")));
       var toggleList = [].slice.call(document.querySelectorAll(Selector$3.DATA_TOGGLE));
 
       for (var i = 0, len = toggleList.length; i < len; i++) {
@@ -2620,7 +2620,7 @@
   var ARIA_ATTRIBUTE_PATTERN = /^aria-[\w-]*$/i;
   var DefaultWhitelist = {
     // Global attributes allowed on any supplied element below.
-    '*': ['class', 'dir', 'id', 'lang', 'role', ARIA_ATTRIBUTE_PATTERN],
+    '*': ['class', 'dir', 'Id', 'lang', 'role', ARIA_ATTRIBUTE_PATTERN],
     a: ['target', 'href', 'title', 'rel'],
     area: [],
     b: [],
@@ -2943,7 +2943,7 @@
 
         var tip = this.getTipElement();
         var tipId = Util.getUID(this.constructor.NAME);
-        tip.setAttribute('id', tipId);
+        tip.setAttribute('Id', tipId);
         this.element.setAttribute('aria-describedby', tipId);
         this.setContent();
 
@@ -3772,14 +3772,14 @@
       config = _objectSpread({}, Default$6, typeof config === 'object' && config ? config : {});
 
       if (typeof config.target !== 'string') {
-        var id = $(config.target).attr('id');
+        var Id = $(config.target).attr('Id');
 
-        if (!id) {
-          id = Util.getUID(NAME$8);
-          $(config.target).attr('id', id);
+        if (!Id) {
+          Id = Util.getUID(NAME$8);
+          $(config.target).attr('Id', Id);
         }
 
-        config.target = "#" + id;
+        config.target = "#" + Id;
       }
 
       Util.typeCheckConfig(NAME$8, config, DefaultType$6);

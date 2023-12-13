@@ -24,13 +24,13 @@
                                             Project Name
                                         </th>
                                         <th>
-                                            Project Description
+                                            Project description
                                         </th>
                                         <th>
                                             Sent By
                                         </th>
                                         <th>
-                                            Status
+                                            status
                                         </th>
                                         <th>
                                             Action
@@ -54,12 +54,12 @@
                                             @Html.DisplayFor(x => item.Member)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Status)
+                                            @Html.DisplayFor(modelItem => item.status)
                                         </td>
                                         @if (ViewBag.CanChange)
                                         {
                                             <td>
-                                                <a class="btn btn-success" asp-action="ChangeProject" asp-controller="User" asp-route-id="@item.ProjectId" asp-route-id2="@item.RequestId">Change Project</a>
+                                                <a class="btn btn-success" asp-action="ChangeProject" asp-controller="User" asp-route-Id="@item.projectId" asp-route-id2="@item.RequestId">Change Project</a>
                                             </td>
                                         }
                                         else

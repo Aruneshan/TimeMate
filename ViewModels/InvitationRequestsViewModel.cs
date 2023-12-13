@@ -11,7 +11,7 @@ namespace TimeMate.ViewModels
     {
         public string ProjectName { get; set; }
         public string ProjectDescription { get; set; }
-        public string Status { get; set; }
+        public string status { get; set; }
         public int InvitationId { get; set; }
     }
 }

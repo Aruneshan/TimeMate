@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+#nullable disable
 
 namespace TimeMate.ViewModels
 {
     public class ForgotPasswordViewModel
     {
         [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
+        [RegularExpression(@"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
+        ErrorMessage = "Invalid email address.")]
         public string Email { get; set; }
 
         [Required]

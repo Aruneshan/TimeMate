@@ -19,7 +19,7 @@
                                         <th>
                                             Invitation
                                         </th>
-                                        <th>Project Description</th>
+                                        <th>Project description</th>
                                         <th>Request</th>
                                         <th></th>
                                     </tr>
@@ -30,9 +30,9 @@
                                         <tr>
                                             <td>You are invited to @item.ProjectName Project.</td>
                                             <td>@item.ProjectDescription</td>
-                                            <td>@item.Status</td>
+                                            <td>@item.status</td>
                                             <td>
-                                                <a asp-action="AcceptInvitation" class="btn btn-outline-primary float-right" asp-route-id="@item.InvitationId">Accept Invitation</a>
+                                                <a asp-action="AcceptInvitation" class="btn btn-outline-primary float-right" asp-route-Id="@item.InvitationId">Accept Invitation</a>
                                             </td>
                                         </tr>
                                     }

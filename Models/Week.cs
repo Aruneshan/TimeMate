@@ -14,8 +14,8 @@ namespace TimeMate.Models
         }
 
         public int WeekId { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime startDate { get; set; }
+        public DateTime endDate { get; set; }
         public string Pmid { get; set; }
 
         public virtual TimeMateUser Pm { get; set; }

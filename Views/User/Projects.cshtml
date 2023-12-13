@@ -5,38 +5,30 @@
     Layout = "~/Views/Layouts/_ManagerLayout.cshtml";
 }
 
-<div style="margin-left:650px">
-    <form asp-controller="User" asp-action="Index" method="get">
+<div style="margin-left:980px">
+    <form asp-controller="User" asp-action="Projects" method="get">
         <p>
-            Name: <input type="text" name="Text" asp-for="SearchString" />
-            <input type = "submit" value = "Filter" />
+            Project Name <input type="text" name="searchString" asp-for="SearchString" />
+            <input type="submit" value="Filter" />
         </p>
     </form>
 </div>
-<div class="col-md-12">
 
+<div class="col-md-12">
     <div class="">
         <div class="card shadow mb-4 border-left-primary shadow h-100 py-2">
-        
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
             </div>
-
             <div class="card-body">
                 <div class="">
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>
-                                        Project Name
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.ProjectsList[0].Description)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.ProjectsList[0].DateCreated)
-                                    </th>
+                                    <th>Project Name</th>
+                                    <th>@Html.DisplayNameFor(model => model.ProjectsList[0].description)</th>
+                                    <th>@Html.DisplayNameFor(model => model.ProjectsList[0].DateCreated)</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -44,28 +36,30 @@
                                 @foreach (var item in Model.ProjectsList)
                                 {
                                     <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Name)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Description)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.DateCreated, "{0:dd/MM/yyyy}", new { @class = "form-control" }) 
-                                        </td>
-
+                                        <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.description)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.DateCreated, "{0:dd/MM/yyyy}", new { @class = "form-control" })</td>
                                         <td class="float-right">
-                                            <a asp-action="ProductivityOfEmployee" class="btn btn-outline-primary btn-sm" asp-route-id="@item.ProjectId">Productivity</a>
-                                            <a asp-action="AddProjectMember" class="btn btn-outline-primary btn-sm" asp-route-id="@item.ProjectId">Add Member</a>
-                                            <a asp-action="ProjectMembers" class="btn btn-outline-success btn-sm" asp-route-id="@item.ProjectId">Member List</a>
+                                            <a asp-action="ProductivityOfEmployee" class="btn btn-outline-primary btn-sm" asp-route-Id="@item.projectId">Productivity</a>
+                                            <a asp-action="AddProjectMember" class="btn btn-outline-primary btn-sm" asp-route-Id="@item.projectId">Add Member</a>
+                                            <a asp-action="ProjectMembers" class="btn btn-outline-success btn-sm" asp-route-Id="@item.projectId">Member List</a>
                                         </td>
-
                                     </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                 </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <ul class="pagination">
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                            <a class="page-link" asp-action="Projects" asp-route-Id="@ViewBag.WorkspaceId" asp-route-page="@i" asp-route-searchString="@ViewBag.SearchString">@i</a>
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
     </div>

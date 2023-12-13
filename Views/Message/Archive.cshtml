@@ -4,7 +4,7 @@
     {
         Layout = "~/Views/Layouts/_AdminLayout.cshtml";
     }
-    else if (User.IsInRole("Employee"))
+    else if (User.IsInRole("employee"))
     {
         Layout = "~/Views/Layouts/_EmployeeLayout.cshtml";
     }
@@ -44,8 +44,13 @@
     </div>
     <hr />
     <p>
-        <a asp-action="MessageEdit" asp-route-id="@Model.Id">Edit</a> |
+        <a asp-action="MessageEdit" asp-route-Id="@Model.Id">Edit</a> |
         <a asp-action="MessageIndex">Back to List</a>
     </p>
 </div>
 
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

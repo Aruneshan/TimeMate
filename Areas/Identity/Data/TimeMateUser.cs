@@ -12,7 +12,7 @@ public class TimeMateUser : IdentityUser
 {
     public string FirstName { get;set; }
     public string LastName { get;set; }
-
+    
     public TimeMateUser()
     {
 

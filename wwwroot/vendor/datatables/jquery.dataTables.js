@@ -876,7 +876,7 @@
 
 			/*global oInit,_that,emptyInit*/
 			var i=0, iLen, j, jLen, k, kLen;
-			var sId = this.getAttribute( 'id' );
+			var sId = this.getAttribute( 'Id' );
 			var bInitHandedOff = false;
 			var defaults = DataTable.defaults;
 			var $this = $(this);
@@ -936,9 +936,9 @@
 				/* If the element we are initialising has the same ID as a table which was previously
 				 * initialised, but the table nodes don't match (from before) then we destroy the old
 				 * instance by simply deleting it. This is under the assumption that the table has been
-				 * destroyed by other methods. Anyone using non-id selectors will need to do this manually
+				 * destroyed by other methods. Anyone using non-Id selectors will need to do this manually
 				 */
-				if ( s.sTableId == this.id )
+				if ( s.sTableId == this.Id )
 				{
 					allSettings.splice( i, 1 );
 					break;
@@ -949,7 +949,7 @@
 			if ( sId === null || sId === "" )
 			{
 				sId = "DataTables_Table_"+(DataTable.ext._unique++);
-				this.id = sId;
+				this.Id = sId;
 			}
 			
 			/* Create the settings object for this table and set some of the default parameters */
@@ -2412,9 +2412,9 @@
 		/* Add to the display array */
 		oSettings.aiDisplayMaster.push( iRow );
 	
-		var id = oSettings.rowIdFn( aDataIn );
-		if ( id !== undefined ) {
-			oSettings.aIds[ id ] = oData;
+		var Id = oSettings.rowIdFn( aDataIn );
+		if ( Id !== undefined ) {
+			oSettings.aIds[ Id ] = oData;
 		}
 	
 		/* Create the DOM information, or register it if already present */
@@ -2483,7 +2483,7 @@
 	/**
 	 * Get the data for a given cell from the internal cache, taking into account data mapping
 	 *  @param {object} settings dataTables settings object
-	 *  @param {int} rowIdx aoData row id
+	 *  @param {int} rowIdx aoData row Id
 	 *  @param {int} colIdx Column index
 	 *  @param {string} type data get type ('display', 'type' 'filter' 'sort')
 	 *  @returns {*} Cell data
@@ -2532,7 +2532,7 @@
 	/**
 	 * Set the value for a specific cell, into the internal data cache
 	 *  @param {object} settings dataTables settings object
-	 *  @param {int} rowIdx aoData row id
+	 *  @param {int} rowIdx aoData row Id
 	 *  @param {int} colIdx Column index
 	 *  @param {*} val Value to set
 	 *  @memberof DataTable#oApi
@@ -3049,10 +3049,10 @@
 		var rowNode = row.firstChild ? row : row.nTr;
 	
 		if ( rowNode ) {
-			var id = rowNode.getAttribute( 'id' );
+			var Id = rowNode.getAttribute( 'Id' );
 	
-			if ( id ) {
-				_fnSetObjectDataFn( settings.rowId )( d, id );
+			if ( Id ) {
+				_fnSetObjectDataFn( settings.rowId )( d, Id );
 			}
 		}
 	
@@ -3161,10 +3161,10 @@
 		var data = row._aData;
 	
 		if ( tr ) {
-			var id = settings.rowIdFn( data );
+			var Id = settings.rowIdFn( data );
 	
-			if ( id ) {
-				tr.id = id;
+			if ( Id ) {
+				tr.Id = Id;
 			}
 	
 			if ( data.DT_RowClass ) {
@@ -3567,7 +3567,7 @@
 	
 		// All DataTables are wrapped in a div
 		var insert = $('<div/>', {
-			id:      oSettings.sTableId+'_wrapper',
+			Id:      oSettings.sTableId+'_wrapper',
 			'class': classes.sWrapper + (oSettings.nTFoot ? '' : ' '+classes.sNoFooter)
 		} );
 	
@@ -3588,7 +3588,7 @@
 				/* New container div */
 				nNewNode = $('<div/>')[0];
 	
-				/* Check to see if we should append an id and/or a class name to the container */
+				/* Check to see if we should append an Id and/or a class name to the container */
 				cNext = aDom[i+1];
 				if ( cNext == "'" || cNext == '"' )
 				{
@@ -3610,18 +3610,18 @@
 						sAttr = classes.sJUIFooter;
 					}
 	
-					/* The attribute can be in the format of "#id.class", "#id" or "class" This logic
+					/* The attribute can be in the format of "#Id.class", "#Id" or "class" This logic
 					 * breaks the string into parts and applies them as needed
 					 */
 					if ( sAttr.indexOf('.') != -1 )
 					{
 						var aSplit = sAttr.split('.');
-						nNewNode.id = aSplit[0].substr(1, aSplit[0].length-1);
+						nNewNode.Id = aSplit[0].substr(1, aSplit[0].length-1);
 						nNewNode.className = aSplit[1];
 					}
 					else if ( sAttr.charAt(0) == "#" )
 					{
-						nNewNode.id = sAttr.substr(1, sAttr.length-1);
+						nNewNode.Id = sAttr.substr(1, sAttr.length-1);
 					}
 					else
 					{
@@ -4186,7 +4186,7 @@
 			str+input;
 	
 		var filter = $('<div/>', {
-				'id': ! features.f ? tableId+'_filter' : null,
+				'Id': ! features.f ? tableId+'_filter' : null,
 				'class': classes.sFilter
 			} )
 			.append( $('<label/>' ).append( str ) );
@@ -4594,7 +4594,7 @@
 			nodes = settings.aanFeatures.i,
 			n = $('<div/>', {
 				'class': settings.oClasses.sInfo,
-				'id': ! nodes ? tid+'_info' : null
+				'Id': ! nodes ? tid+'_info' : null
 			} );
 	
 		if ( ! nodes ) {
@@ -4830,7 +4830,7 @@
 	
 		var div = $('<div><label/></div>').addClass( classes.sLength );
 		if ( ! settings.aanFeatures.l ) {
-			div[0].id = tableId+'_length';
+			div[0].Id = tableId+'_length';
 		}
 	
 		div.children().append(
@@ -4888,7 +4888,7 @@
 		/* Add a draw callback for the pagination on first instance, to update the paging display */
 		if ( ! features.p )
 		{
-			node.id = settings.sTableId+'_paginate';
+			node.Id = settings.sTableId+'_paginate';
 	
 			settings.aoDrawCallback.push( {
 				"fn": function( settings ) {
@@ -5006,7 +5006,7 @@
 	function _fnFeatureHtmlProcessing ( settings )
 	{
 		return $('<div/>', {
-				'id': ! settings.aanFeatures.r ? settings.sTableId+'_processing' : null,
+				'Id': ! settings.aanFeatures.r ? settings.sTableId+'_processing' : null,
 				'class': settings.oClasses.sProcessing
 			} )
 			.html( settings.oLanguage.sProcessing )
@@ -5099,7 +5099,7 @@
 							} )
 							.append(
 								headerClone
-									.removeAttr('id')
+									.removeAttr('Id')
 									.css( 'margin-left', 0 )
 									.append( captionSide === 'top' ? caption : null )
 									.append(
@@ -5130,7 +5130,7 @@
 						$(_div, { 'class': classes.sScrollFootInner } )
 							.append(
 								footerClone
-									.removeAttr('id')
+									.removeAttr('Id')
 									.css( 'margin-left', 0 )
 									.append( captionSide === 'bottom' ? caption : null )
 									.append(
@@ -5575,7 +5575,7 @@
 			// table widths
 			var tmpTable = $(table).clone() // don't use cloneNode - IE8 will remove events on the main table
 				.css( 'visibility', 'hidden' )
-				.removeAttr( 'id' );
+				.removeAttr( 'Id' );
 	
 			// Clean up the table body
 			tmpTable.find('tbody tr').remove();
@@ -6448,13 +6448,13 @@
 	 *  @param {object} settings dataTables settings object
 	 *  @param {int} level log error messages, or display them to the user
 	 *  @param {string} msg error message
-	 *  @param {int} tn Technical note id to get more information about the error.
+	 *  @param {int} tn Technical note Id to get more information about the error.
 	 *  @memberof DataTable#oApi
 	 */
 	function _fnLog( settings, level, msg, tn )
 	{
 		msg = 'DataTables warning: '+
-			(settings ? 'table id='+settings.sTableId+' - ' : '')+msg;
+			(settings ? 'table Id='+settings.sTableId+' - ' : '')+msg;
 	
 		if ( tn ) {
 			msg += '. For more information about this error, please see '+
@@ -7928,23 +7928,23 @@
 				}
 			}
 	
-			// ID selector. Want to always be able to select rows by id, regardless
+			// ID selector. Want to always be able to select rows by Id, regardless
 			// of if the tr element has been created or not, so can't rely upon
 			// jQuery here - hence a custom implementation. This does not match
 			// Sizzle's fast selector or HTML4 - in HTML5 the ID can be anything,
 			// but to select it using a CSS selector engine (like Sizzle or
 			// querySelect) it would need to need to be escaped for some characters.
 			// DataTables simplifies this for row selectors since you can select
-			// only a row. A # indicates an id any anything that follows is the id -
+			// only a row. A # indicates an Id any anything that follows is the Id -
 			// unescaped.
 			if ( typeof sel === 'string' && sel.charAt(0) === '#' ) {
-				// get row index from id
+				// get row index from Id
 				var rowObj = settings.aIds[ sel.replace( /^#/, '' ) ];
 				if ( rowObj !== undefined ) {
 					return [ rowObj.idx ];
 				}
 	
-				// need to fall through to jQuery in case there is DOM id that
+				// need to fall through to jQuery in case there is DOM Id that
 				// matches
 			}
 			
@@ -8022,15 +8022,15 @@
 		}, 1 );
 	} );
 	
-	_api_registerPlural( 'rows().ids()', 'row().id()', function ( hash ) {
+	_api_registerPlural( 'rows().ids()', 'row().Id()', function ( hash ) {
 		var a = [];
 		var context = this.context;
 	
 		// `iterator` will drop undefined values, but in this case we want them
 		for ( var i=0, ien=context.length ; i<ien ; i++ ) {
 			for ( var j=0, jen=this[i].length ; j<jen ; j++ ) {
-				var id = context[i].rowIdFn( context[i].aoData[ this[i][j] ]._aData );
-				a.push( (hash === true ? '#' : '' )+ id );
+				var Id = context[i].rowIdFn( context[i].aoData[ this[i][j] ]._aData );
+				a.push( (hash === true ? '#' : '' )+ Id );
 			}
 		}
 	
@@ -8080,9 +8080,9 @@
 			_fnLengthOverflow( settings );
 	
 			// Remove the row's ID reference if there is one
-			var id = settings.rowIdFn( rowData._aData );
-			if ( id !== undefined ) {
-				delete settings.aIds[ id ];
+			var Id = settings.rowIdFn( rowData._aData );
+			if ( Id !== undefined ) {
+				delete settings.aIds[ Id ];
 			}
 		} );
 	
@@ -8149,9 +8149,9 @@
 		var row = ctx[0].aoData[ this[0] ];
 		row._aData = data;
 	
-		// If the DOM has an id, and the data source is an array
-		if ( $.isArray( data ) && row.nTr.id ) {
-			_fnSetObjectDataFn( ctx[0].rowId )( data, row.nTr.id );
+		// If the DOM has an Id, and the data source is an array
+		if ( $.isArray( data ) && row.nTr.Id ) {
+			_fnSetObjectDataFn( ctx[0].rowId )( data, row.nTr.Id );
 		}
 	
 		// Automatically invalidate
@@ -11860,7 +11860,7 @@
 		 *       <ul>
 		 *         <li>'&lt;' and '&gt;' - div elements</li>
 		 *         <li>'&lt;"class" and '&gt;' - div with a class</li>
-		 *         <li>'&lt;"#id" and '&gt;' - div with an ID</li>
+		 *         <li>'&lt;"#Id" and '&gt;' - div with an ID</li>
 		 *       </ul>
 		 *     </li>
 		 *     <li>Examples:
@@ -12045,8 +12045,8 @@
 	
 	
 		/**
-		 * Set the data property name that DataTables should use to get a row's id
-		 * to set as the `id` property in the node.
+		 * Set the data property name that DataTables should use to get a row's Id
+		 * to set as the `Id` property in the node.
 		 *  @type string
 		 *  @default DT_RowId
 		 *
@@ -13820,14 +13820,14 @@
 		"oPlugins": {},
 	
 		/**
-		 * Function used to get a row's id from the row's data
+		 * Function used to get a row's Id from the row's data
 		 *  @type function
 		 *  @default null
 		 */
 		"rowIdFn": null,
 	
 		/**
-		 * Data location where to store a row's id
+		 * Data location where to store a row's Id
 		 *  @type string
 		 *  @default null
 		 */
@@ -14586,7 +14586,7 @@
 										'aria-label': aria[ button ],
 										'data-dt-idx': counter,
 										'tabindex': settings.iTabIndex,
-										'id': idx === 0 && typeof button === 'string' ?
+										'Id': idx === 0 && typeof button === 'string' ?
 											settings.sTableId +'_'+ button :
 											null
 									} )

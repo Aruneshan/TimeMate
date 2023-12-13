@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace TimeMate.Controllers
 {
     [Log]
-
+    [Authorize(Roles = "Admin")]
     public class RoleController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -17,23 +17,28 @@ namespace TimeMate.Controllers
             _roleManager = roleManager;
             _logger = logger;
         }
-        //[Authorize (Roles ="Admin")]
         public IActionResult Index()
         {
             var roles = _roleManager.Roles;
             return View(roles);
         }
-        //[Authorize(Roles = "Admin")]
+        
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(IdentityRole model)
         {
+            if (model.Name == null)
+            {
+                ModelState.AddModelError("Name", "Role name cannot be null.");
+                return View(model);
+            }
+
             var existingRole = await _roleManager.FindByNameAsync(model.Name);
+
             if (existingRole != null)
             {
                 ModelState.AddModelError("Name", "Role already exists");

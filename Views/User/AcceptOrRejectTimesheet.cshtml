@@ -7,13 +7,13 @@
 
 
     <div class="col-md-12">
-        @using (Html.BeginForm("RejectTimesheet", "User", new { id = @ViewBag.IndividualId, id2 = @ViewBag.ProjectId }))
+        @using (Html.BeginForm("RejectTimesheet", "User", new { Id = @ViewBag.individualId, id2 = @ViewBag.projectId }))
         {
-            <a onclick="return confirm('Are you sure you want to reject this timesheet?');" style="float: right;" asp-action="RejectTimesheet" class="btn btn-danger" asp-route-id="@ViewBag.IndividualId" asp-route-id2="@ViewBag.ProjectId">Reject</a>
+            <a onclick="return confirm('Are you sure you want to reject this timesheet?');" style="float: right;" asp-action="RejectTimesheet" class="btn btn-danger" asp-route-Id="@ViewBag.individualId" asp-route-id2="@ViewBag.projectId">Reject</a>
         }
-        @using (Html.BeginForm("AcceptTimesheet", "User", new { id = @ViewBag.IndividualId, id2 = @ViewBag.ProjectId }))
+        @using (Html.BeginForm("AcceptTimesheet", "User", new { Id = @ViewBag.individualId, id2 = @ViewBag.projectId }))
          {
-            <a onclick="return confirm('Are you sure you want to accept this timesheet?');" style="float:right;margin-right:5px" class="btn btn-success" asp-action="AcceptTimesheet" asp-route-id="@ViewBag.IndividualId" asp-route-id2="@ViewBag.ProjectId">Accept</a>
+            <a onclick="return confirm('Are you sure you want to accept this timesheet?');" style="float:right;margin-right:5px" class="btn btn-success" asp-action="AcceptTimesheet" asp-route-Id="@ViewBag.individualId" asp-route-id2="@ViewBag.projectId">Accept</a>
         }
     </div>
 

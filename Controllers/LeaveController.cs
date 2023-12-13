@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,20 +22,20 @@ namespace TimeMate.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var timeMateContext = _context.leaveRequests.Include(l => l.Employee);
+            var timeMateContext = _context.leaveRequests.Include(l => l.employee);
             return View(await timeMateContext.ToListAsync());
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? Id)
         {
-            if (id == null || _context.leaveRequests == null)
+            if (Id == null || _context.leaveRequests == null)
             {
                 return NotFound();
             }
 
             var leaveRequest = await _context.leaveRequests
-                .Include(l => l.Employee)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(l => l.employee)
+                .FirstOrDefaultAsync(m => m.Id == Id);
             if (leaveRequest == null)
             {
                 return NotFound();
@@ -53,7 +54,7 @@ namespace TimeMate.Controllers
         // POST: Leave/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EmployeeId,StartDate,EndDate,Reason,Status,CompensatoryDate,CancellationReason")] LeaveRequest leaveRequest)
+        public async Task<IActionResult> Create([Bind("Id,EmployeeId,startDate,endDate,Reason,status,CompensatoryDate,CancellationReason")] LeaveRequest leaveRequest)
         {
             if (ModelState.IsValid)
             {
@@ -66,14 +67,14 @@ namespace TimeMate.Controllers
         }
 
         // GET: Leave/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? Id)
         {
-            if (id == null || _context.leaveRequests == null)
+            if (Id == null || _context.leaveRequests == null)
             {
                 return NotFound();
             }
 
-            var leaveRequest = await _context.leaveRequests.FindAsync(id);
+            var leaveRequest = await _context.leaveRequests.FindAsync(Id);
             if (leaveRequest == null)
             {
                 return NotFound();
@@ -87,9 +88,9 @@ namespace TimeMate.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeId,StartDate,EndDate,Reason,Status,CompensatoryDate,CancellationReason")] LeaveRequest leaveRequest)
+        public async Task<IActionResult> Edit(int Id, [Bind("Id,EmployeeId,startDate,endDate,Reason,status,CompensatoryDate,CancellationReason")] LeaveRequest leaveRequest)
         {
-            if (id != leaveRequest.Id)
+            if (Id != leaveRequest.Id)
             {
                 return NotFound();
             }
@@ -119,16 +120,16 @@ namespace TimeMate.Controllers
         }
 
         // GET: Leave/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? Id)
         {
-            if (id == null || _context.leaveRequests == null)
+            if (Id == null || _context.leaveRequests == null)
             {
                 return NotFound();
             }
 
             var leaveRequest = await _context.leaveRequests
-                .Include(l => l.Employee)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(l => l.employee)
+                .FirstOrDefaultAsync(m => m.Id == Id);
             if (leaveRequest == null)
             {
                 return NotFound();
@@ -140,13 +141,13 @@ namespace TimeMate.Controllers
         // POST: Leave/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int Id)
         {
             if (_context.leaveRequests == null)
             {
                 return Problem("Entity set 'TimeMateContext.leaveRequests'  is null.");
             }
-            var leaveRequest = await _context.leaveRequests.FindAsync(id);
+            var leaveRequest = await _context.leaveRequests.FindAsync(Id);
             if (leaveRequest != null)
             {
                 _context.leaveRequests.Remove(leaveRequest);
@@ -156,19 +157,19 @@ namespace TimeMate.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool LeaveRequestExists(int id)
+        private bool LeaveRequestExists(int Id)
         {
-          return (_context.leaveRequests?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.leaveRequests?.Any(e => e.Id == Id)).GetValueOrDefault();
         }
         // GET: Leave/Approve/5
-        public async Task<IActionResult> Approve(int? id)
+        public async Task<IActionResult> Approve(int? Id)
         {
-            if (id == null || _context.leaveRequests == null)
+            if (Id == null || _context.leaveRequests == null)
             {
                 return NotFound();
             }
 
-            var leaveRequest = await _context.leaveRequests.FindAsync(id);
+            var leaveRequest = await _context.leaveRequests.FindAsync(Id);
             if (leaveRequest == null)
             {
                 return NotFound();
@@ -179,16 +180,22 @@ namespace TimeMate.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
-        // GET: Leave/Reject/5
-        public async Task<IActionResult> Reject(int? id)
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Manage()
         {
-            if (id == null || _context.leaveRequests == null)
+            var timeMateContext = _context.leaveRequests.Include(l => l.employee);
+            return View(await timeMateContext.ToListAsync());
+        }
+        // GET: Leave/Reject/5
+        public async Task<IActionResult> Reject(int? Id)
+        {
+            if (Id == null || _context.leaveRequests == null)
             {
                 return NotFound();
             }
 
-            var leaveRequest = await _context.leaveRequests.FindAsync(id);
+            var leaveRequest = await _context.leaveRequests.FindAsync(Id);
             if (leaveRequest == null)
             {
                 return NotFound();

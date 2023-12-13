@@ -21,7 +21,7 @@
                                     <thead>
                                         <tr>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.StartDate)
+                                                @Html.DisplayNameFor(model => model.startDate)
                                             </th>
 
                                             <th>
@@ -38,7 +38,7 @@
                                             @if (Model != null)
                                             {
                                                 <td>
-                                                    @Html.DisplayFor(model => model.StartDate)
+                                                    @Html.DisplayFor(model => model.startDate)
                                                 </td>
 
                                                 <td>
@@ -49,12 +49,12 @@
                                                 </td>
                                                 <td>
                                                     <div style="float:right">
-                                                        <a asp-action="EditWeekSetting" asp-route-id="@Model.WeekSettingId">
+                                                        <a asp-action="EditWeekSetting" asp-route-Id="@Model.WeekSettingId">
                                                             <i class="fas fa-edit fa-sm fa-fw mr-2 text-black-400">
                                                                 
                                                             </i>
                                                         </a>    
-                                                        <a asp-action="DeleteSetting" asp-route-id="@Model.WeekSettingId">
+                                                        <a asp-action="DeleteSetting" asp-route-Id="@Model.WeekSettingId">
                                                             <i class="fas fa-trash fa-sm fa-fw mr-2 text-black-400"></i>
                                                         </a>
                                                     </div>

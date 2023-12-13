@@ -11,7 +11,7 @@ namespace TimeMate.ViewModels
         public string MemberEmail { get; set; }
         public int ProjectAssignmentId { get; set; }
         public string IndividualUserId { get; set; }
-        public int ProjectId { get; set; }
+        public int projectId { get; set; }
 
     }
 }

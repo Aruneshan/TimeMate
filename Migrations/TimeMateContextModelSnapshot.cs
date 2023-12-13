@@ -17,7 +17,7 @@ namespace TimeMate.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "7.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -232,26 +232,26 @@ namespace TimeMate.Migrations
 
             modelBuilder.Entity("TimeMate.Models.ChangeProjectRequests", b =>
                 {
-                    b.Property<int>("ChangeProjectRequestId")
+                    b.Property<int>("changeProjectRequestId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChangeProjectRequestId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("changeProjectRequestId"));
 
-                    b.Property<string>("IndividualId")
+                    b.Property<string>("individualId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<int>("projectId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ChangeProjectRequestId");
+                    b.HasKey("changeProjectRequestId");
 
-                    b.HasIndex("IndividualId");
+                    b.HasIndex("individualId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("projectId");
 
                     b.ToTable("ChangeProjectRequests");
                 });
@@ -264,20 +264,24 @@ namespace TimeMate.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("emailid")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("feedback")
+                    b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("rating")
+                    b.Property<int>("Rating")
                         .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Feedback");
+                    b.ToTable("feeds");
                 });
 
             modelBuilder.Entity("TimeMate.Models.GoalSetting", b =>
@@ -288,21 +292,21 @@ namespace TimeMate.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AssignedBy")
+                    b.Property<string>("assignedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AssignedTo")
+                    b.Property<string>("assignedTo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("description")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<DateTime?>("DueDate")
+                    b.Property<DateTime?>("dueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsComplete")
+                    b.Property<bool>("isComplete")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -318,17 +322,7 @@ namespace TimeMate.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CancellationReason")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("CompensatoryDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EmployeeId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ManagerApproval")
@@ -338,10 +332,16 @@ namespace TimeMate.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("endDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
+                    b.Property<DateTime>("startDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -406,10 +406,6 @@ namespace TimeMate.Migrations
                     b.Property<DateTime?>("ApprovedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
 
@@ -424,6 +420,10 @@ namespace TimeMate.Migrations
                     b.Property<DateTime>("RequestedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("description")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Permission");
@@ -431,17 +431,14 @@ namespace TimeMate.Migrations
 
             modelBuilder.Entity("TimeMate.Models.Project", b =>
                 {
-                    b.Property<int>("ProjectId")
+                    b.Property<int>("projectId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("projectId"));
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -449,7 +446,10 @@ namespace TimeMate.Migrations
                     b.Property<int>("WorkspaceId")
                         .HasColumnType("int");
 
-                    b.HasKey("ProjectId");
+                    b.Property<string>("description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("projectId");
 
                     b.HasIndex("WorkspaceId");
 
@@ -467,17 +467,17 @@ namespace TimeMate.Migrations
                     b.Property<string>("EmployeeId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<int>("projectId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("status")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProjectAssignmentId");
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("projectId");
 
                     b.ToTable("ProjectAssignment");
                 });
@@ -514,17 +514,8 @@ namespace TimeMate.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EmployeeId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("HoursSpent")
                         .HasColumnType("int");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Task")
                         .HasColumnType("nvarchar(max)");
@@ -532,11 +523,20 @@ namespace TimeMate.Migrations
                     b.Property<string>("TaskType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("projectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("status")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("TimeSheetId");
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("projectId");
 
                     b.ToTable("TimeSheets");
                 });
@@ -552,14 +552,14 @@ namespace TimeMate.Migrations
                     b.Property<string>("EndDay")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("StartDay")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("WorkspaceId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("startDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("WeekSettingId");
 
@@ -647,11 +647,11 @@ namespace TimeMate.Migrations
                 {
                     b.HasOne("TimeMate.Areas.Identity.Data.TimeMateUser", "TimeMateUser")
                         .WithMany()
-                        .HasForeignKey("IndividualId");
+                        .HasForeignKey("individualId");
 
                     b.HasOne("TimeMate.Models.Project", "Project")
                         .WithMany()
-                        .HasForeignKey("ProjectId")
+                        .HasForeignKey("projectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -662,11 +662,11 @@ namespace TimeMate.Migrations
 
             modelBuilder.Entity("TimeMate.Models.LeaveRequest", b =>
                 {
-                    b.HasOne("TimeMate.Areas.Identity.Data.TimeMateUser", "Employee")
+                    b.HasOne("TimeMate.Areas.Identity.Data.TimeMateUser", "employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId");
 
-                    b.Navigation("Employee");
+                    b.Navigation("employee");
                 });
 
             modelBuilder.Entity("TimeMate.Models.Project", b =>
@@ -688,7 +688,7 @@ namespace TimeMate.Migrations
 
                     b.HasOne("TimeMate.Models.Project", "Project")
                         .WithMany()
-                        .HasForeignKey("ProjectId")
+                        .HasForeignKey("projectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -716,7 +716,7 @@ namespace TimeMate.Migrations
 
                     b.HasOne("TimeMate.Models.Project", "Project")
                         .WithMany()
-                        .HasForeignKey("ProjectId")
+                        .HasForeignKey("projectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

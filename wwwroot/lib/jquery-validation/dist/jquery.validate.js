@@ -795,10 +795,10 @@ $.extend( $.validator, {
 					}
 				} catch ( e ) {
 					if ( this.settings.debug && window.console ) {
-						console.log( "Exception occurred when checking element " + element.id + ", check the '" + rule.method + "' method.", e );
+						console.log( "Exception occurred when checking element " + element.Id + ", check the '" + rule.method + "' method.", e );
 					}
 					if ( e instanceof TypeError ) {
-						e.message += ".  Exception occurred when checking element " + element.id + ", check the '" + rule.method + "' method.";
+						e.message += ".  Exception occurred when checking element " + element.Id + ", check the '" + rule.method + "' method.";
 					}
 
 					throw e;
@@ -944,7 +944,7 @@ $.extend( $.validator, {
 
 				// Create error element
 				error = $( "<" + this.settings.errorElement + ">" )
-					.attr( "id", elementID + "-error" )
+					.attr( "Id", elementID + "-error" )
 					.addClass( this.settings.errorClass )
 					.html( message || "" );
 
@@ -973,7 +973,7 @@ $.extend( $.validator, {
 					// If the element is not a child of an associated label, then it's necessary
 					// to explicitly apply aria-describedby
 				} else if ( error.parents( "label[for='" + this.escapeCssMeta( elementID ) + "']" ).length === 0 ) {
-					errorID = error.attr( "id" );
+					errorID = error.attr( "Id" );
 
 					// Respect existing non-error aria-describedby
 					if ( !describedBy ) {
@@ -992,7 +992,7 @@ $.extend( $.validator, {
 						$.each( v.groups, function( name, testgroup ) {
 							if ( testgroup === group ) {
 								$( "[name='" + v.escapeCssMeta( name ) + "']", v.currentForm )
-									.attr( "aria-describedby", error.attr( "id" ) );
+									.attr( "aria-describedby", error.attr( "Id" ) );
 							}
 						} );
 					}
@@ -1027,13 +1027,13 @@ $.extend( $.validator, {
 
 		// See https://api.jquery.com/category/selectors/, for CSS
 		// meta-characters that should be escaped in order to be used with JQuery
-		// as a literal part of a name/id or any selector.
+		// as a literal part of a name/Id or any selector.
 		escapeCssMeta: function( string ) {
 			return string.replace( /([\\!"#$%&'()*+,./:;<=>?@\[\]^`{|}~])/g, "\\$1" );
 		},
 
 		idOrName: function( element ) {
-			return this.groups[ element.name ] || ( this.checkable( element ) ? element.name : element.id || element.name );
+			return this.groups[ element.name ] || ( this.checkable( element ) ? element.name : element.Id || element.name );
 		},
 
 		validationTargetFor: function( element ) {

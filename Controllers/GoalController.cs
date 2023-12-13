@@ -11,7 +11,7 @@ using TimeMate.Models;
 
 namespace TimeMate.Controllers
 {
-    [AllowAnonymous]
+    [Authorize]
     public class GoalController : Controller
     {
         private readonly TimeMateContext _context;
@@ -30,15 +30,15 @@ namespace TimeMate.Controllers
         }
 
         // GET: Goal/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? Id)
         {
-            if (id == null || _context.GoalSetting == null)
+            if (Id == null || _context.GoalSetting == null)
             {
                 return NotFound();
             }
 
             var goalSetting = await _context.GoalSetting
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == Id);
             if (goalSetting == null)
             {
                 return NotFound();
@@ -58,7 +58,7 @@ namespace TimeMate.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,DueDate,IsComplete,AssignedTo,AssignedBy")] GoalSetting goalSetting)
+        public async Task<IActionResult> Create([Bind("Id,description,dueDate,isComplete,assignedTo,assignedBy")] GoalSetting goalSetting)
         {
             if (ModelState.IsValid)
             {
@@ -70,14 +70,14 @@ namespace TimeMate.Controllers
         }
 
         // GET: Goal/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? Id)
         {
-            if (id == null || _context.GoalSetting == null)
+            if (Id == null || _context.GoalSetting == null)
             {
                 return NotFound();
             }
 
-            var goalSetting = await _context.GoalSetting.FindAsync(id);
+            var goalSetting = await _context.GoalSetting.FindAsync(Id);
             if (goalSetting == null)
             {
                 return NotFound();
@@ -90,9 +90,9 @@ namespace TimeMate.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,DueDate,IsComplete,AssignedTo,AssignedBy")] GoalSetting goalSetting)
+        public async Task<IActionResult> Edit(int Id, [Bind("Id,description,dueDate,isComplete,assignedTo,assignedBy")] GoalSetting goalSetting)
         {
-            if (id != goalSetting.Id)
+            if (Id != goalSetting.Id)
             {
                 return NotFound();
             }
@@ -121,15 +121,15 @@ namespace TimeMate.Controllers
         }
 
         // GET: Goal/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? Id)
         {
-            if (id == null || _context.GoalSetting == null)
+            if (Id == null || _context.GoalSetting == null)
             {
                 return NotFound();
             }
 
             var goalSetting = await _context.GoalSetting
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == Id);
             if (goalSetting == null)
             {
                 return NotFound();
@@ -141,13 +141,13 @@ namespace TimeMate.Controllers
         // POST: Goal/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int Id)
         {
             if (_context.GoalSetting == null)
             {
                 return Problem("Entity set 'TimeMateContext.GoalSetting'  is null.");
             }
-            var goalSetting = await _context.GoalSetting.FindAsync(id);
+            var goalSetting = await _context.GoalSetting.FindAsync(Id);
             if (goalSetting != null)
             {
                 _context.GoalSetting.Remove(goalSetting);
@@ -157,9 +157,9 @@ namespace TimeMate.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GoalSettingExists(int id)
+        private bool GoalSettingExists(int Id)
         {
-          return (_context.GoalSetting?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.GoalSetting?.Any(e => e.Id == Id)).GetValueOrDefault();
         }
     }
 }

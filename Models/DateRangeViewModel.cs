@@ -6,10 +6,10 @@ namespace TimeMate.Models
     {
         [Display(Name = "Start Date")]
         [Required(ErrorMessage = "Please enter a start date.")]
-        public DateTime StartDate { get; set; }
+        public DateTime startDate { get; set; }
 
         [Display(Name = "End Date")]
         [Required(ErrorMessage = "Please enter an end date.")]
-        public DateTime EndDate { get; set; }
+        public DateTime endDate { get; set; }
     }
 }

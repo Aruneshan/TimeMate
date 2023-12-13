@@ -7,7 +7,7 @@ else if (User.IsInRole("Manager"))
 {
     Layout = "~/Views/Shared/_SidebarManagerPartial.cshtml";
 }
-else if (User.IsInRole("Employee"))
+else if (User.IsInRole("employee"))
 {
     Layout = "~/Views/Shared/_SidebarEmployeePartial.cshtml";
 }
@@ -31,9 +31,14 @@ else if (User.IsInRole("Employee"))
                 <td>@message.Subject</td>
                 <td>@message.SentDate.ToString("MM/dd/yyyy hh:mm tt")</td>
                 <td>
-                    <a asp-action="Archive" asp-route-id="@message.Id">Archive</a>
+                    <a asp-action="Archive" asp-route-Id="@message.Id">Archive</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

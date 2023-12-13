@@ -9,7 +9,7 @@
     {
         Layout = "~/Views/Layouts/_AdminLayout.cshtml";
     }
-    else if (User.IsInRole("Employee"))
+    else if (User.IsInRole("employee"))
     {
         Layout = "~/Views/Layouts/_EmployeeLayout.cshtml";
     }
@@ -26,19 +26,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DueDate)
+                @Html.DisplayNameFor(model => model.dueDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsComplete)
+                @Html.DisplayNameFor(model => model.isComplete)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AssignedTo)
+                @Html.DisplayNameFor(model => model.assignedTo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AssignedBy)
+                @Html.DisplayNameFor(model => model.assignedBy)
             </th>
             <th></th>
         </tr>
@@ -47,24 +47,24 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @Html.DisplayFor(modelItem => item.description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DueDate)
+                @Html.DisplayFor(modelItem => item.dueDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IsComplete)
+                @Html.DisplayFor(modelItem => item.isComplete)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AssignedTo)
+                @Html.DisplayFor(modelItem => item.assignedTo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AssignedBy)
+                @Html.DisplayFor(modelItem => item.assignedBy)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-Id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-Id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-Id="@item.Id">Delete</a>
             </td>
         </tr>
 }

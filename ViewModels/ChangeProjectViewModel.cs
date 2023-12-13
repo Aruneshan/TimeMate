@@ -9,6 +9,6 @@ namespace TimeMate.ViewModels
     public class ChangeProjectViewModel
     {
         public string ProjectName { get; set; }
-        public string Description { get; set; }
+        public string description { get; set; }
     }
 }

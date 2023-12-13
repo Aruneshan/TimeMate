@@ -19,9 +19,9 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         @Html.ValidationMessage("CustomError", new { @class = "text-danger" })
                         <div class="form-group">
-                            <label asp-for="SearchEmail" class="control-label"></label>
-                            <input asp-for="SearchEmail" class="form-control" />
-                            <span asp-validation-for="SearchEmail" class="text-danger"></span>
+                            <label asp-for="searchEmail" class="control-label"></label>
+                            <input asp-for="searchEmail" class="form-control" />
+                            <span asp-validation-for="searchEmail" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Create" class="btn btn-success float-right" />

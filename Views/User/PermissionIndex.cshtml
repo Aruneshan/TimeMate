@@ -9,7 +9,7 @@
     {
         Layout = "~/Views/Layouts/_AdminLayout.cshtml";
     }
-    else if (User.IsInRole("Employee"))
+    else if (User.IsInRole("employee"))
     {
         Layout = "~/Views/Layouts/_EmployeeLayout.cshtml";
     }
@@ -18,7 +18,6 @@
         Layout = "~/Views/Layouts/_ManagerLayout.cshtml";
     }
 }
-<h1>Index</h1>
 
 <p>
     <a asp-action="PermissionCreate">New Request</a>
@@ -30,7 +29,7 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.description)
             </th>
             <th></th>
         </tr>
@@ -42,12 +41,12 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @Html.DisplayFor(modelItem => item.description)
             </td>
             <td>
-                <a asp-action="PermissionEdit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="PermissionDetails" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="PermissionDelete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="PermissionEdit" asp-route-Id="@item.Id">Edit</a> |
+                <a asp-action="PermissionDetails" asp-route-Id="@item.Id">Details</a> |
+                <a asp-action="PermissionDelete" asp-route-Id="@item.Id">Delete</a>
             </td>
         </tr>
 }

@@ -6,11 +6,37 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TimeMate.Migrations
 {
     /// <inheritdoc />
-    public partial class Timemate : Migration
+    public partial class Feedback : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+
+            migrationBuilder.CreateTable(
+                name: "leaveRequests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    employeeId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    startDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    endDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    CompensatoryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ManagerApproval = table.Column<int>(type: "int", nullable: false),
+                    CancellationReason = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_leaveRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_leaveRequests_AspNetUsers_EmployeeId",
+                        column: x => x.employeeId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -53,18 +79,19 @@ namespace TimeMate.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Feedback",
+                name: "feeds",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    emailid = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    rating = table.Column<int>(type: "int", nullable: false),
-                    feedback = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Feedback", x => x.Id);
+                    table.PrimaryKey("PK_feeds", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -73,9 +100,9 @@ namespace TimeMate.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsComplete = table.Column<bool>(type: "bit", nullable: false),
+                    description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    dueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isComplete = table.Column<bool>(type: "bit", nullable: false),
                     AssignedTo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AssignedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -110,7 +137,7 @@ namespace TimeMate.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     RequestedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RequestedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ApprovedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -228,29 +255,6 @@ namespace TimeMate.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "leaveRequests",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    CompensatoryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CancellationReason = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_leaveRequests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_leaveRequests_AspNetUsers_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
 
             migrationBuilder.CreateTable(
                 name: "Workspaces",
@@ -276,16 +280,16 @@ namespace TimeMate.Migrations
                 name: "Projects",
                 columns: table => new
                 {
-                    ProjectId = table.Column<int>(type: "int", nullable: false)
+                    projectId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     WorkspaceId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Projects", x => x.ProjectId);
+                    table.PrimaryKey("PK_Projects", x => x.projectId);
                     table.ForeignKey(
                         name: "FK_Projects_Workspaces_WorkspaceId",
                         column: x => x.WorkspaceId,
@@ -322,7 +326,7 @@ namespace TimeMate.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StartDay = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EndDay = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    startDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     WorkspaceId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -340,25 +344,25 @@ namespace TimeMate.Migrations
                 name: "ChangeProjectRequests",
                 columns: table => new
                 {
-                    ChangeProjectRequestId = table.Column<int>(type: "int", nullable: false)
+                    changeProjectRequestId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProjectId = table.Column<int>(type: "int", nullable: false),
-                    IndividualId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    projectId = table.Column<int>(type: "int", nullable: false),
+                    individualId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChangeProjectRequests", x => x.ChangeProjectRequestId);
+                    table.PrimaryKey("PK_ChangeProjectRequests", x => x.changeProjectRequestId);
                     table.ForeignKey(
                         name: "FK_ChangeProjectRequests_AspNetUsers_IndividualId",
-                        column: x => x.IndividualId,
+                        column: x => x.individualId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ChangeProjectRequests_Projects_ProjectId",
-                        column: x => x.ProjectId,
+                        column: x => x.projectId,
                         principalTable: "Projects",
-                        principalColumn: "ProjectId",
+                        principalColumn: "projectId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -368,23 +372,23 @@ namespace TimeMate.Migrations
                 {
                     ProjectAssignmentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProjectId = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    projectId = table.Column<int>(type: "int", nullable: false),
+                    employeeId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProjectAssignment", x => x.ProjectAssignmentId);
                     table.ForeignKey(
                         name: "FK_ProjectAssignment_AspNetUsers_EmployeeId",
-                        column: x => x.EmployeeId,
+                        column: x => x.employeeId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ProjectAssignment_Projects_ProjectId",
-                        column: x => x.ProjectId,
+                        column: x => x.projectId,
                         principalTable: "Projects",
-                        principalColumn: "ProjectId",
+                        principalColumn: "projectId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -398,23 +402,23 @@ namespace TimeMate.Migrations
                     Task = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TaskType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HoursSpent = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ProjectId = table.Column<int>(type: "int", nullable: false)
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    employeeId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    projectId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TimeSheets", x => x.TimeSheetId);
                     table.ForeignKey(
                         name: "FK_TimeSheets_AspNetUsers_EmployeeId",
-                        column: x => x.EmployeeId,
+                        column: x => x.employeeId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_TimeSheets_Projects_ProjectId",
-                        column: x => x.ProjectId,
+                        column: x => x.projectId,
                         principalTable: "Projects",
-                        principalColumn: "ProjectId",
+                        principalColumn: "projectId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -460,27 +464,27 @@ namespace TimeMate.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ChangeProjectRequests_IndividualId",
                 table: "ChangeProjectRequests",
-                column: "IndividualId");
+                column: "individualId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChangeProjectRequests_ProjectId",
                 table: "ChangeProjectRequests",
-                column: "ProjectId");
+                column: "projectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_leaveRequests_EmployeeId",
                 table: "leaveRequests",
-                column: "EmployeeId");
+                column: "employeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectAssignment_EmployeeId",
                 table: "ProjectAssignment",
-                column: "EmployeeId");
+                column: "employeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectAssignment_ProjectId",
                 table: "ProjectAssignment",
-                column: "ProjectId");
+                column: "projectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_WorkspaceId",
@@ -495,12 +499,12 @@ namespace TimeMate.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_TimeSheets_EmployeeId",
                 table: "TimeSheets",
-                column: "EmployeeId");
+                column: "employeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TimeSheets_ProjectId",
                 table: "TimeSheets",
-                column: "ProjectId");
+                column: "projectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WeekSettings_WorkspaceId",
@@ -535,7 +539,7 @@ namespace TimeMate.Migrations
                 name: "ChangeProjectRequests");
 
             migrationBuilder.DropTable(
-                name: "Feedback");
+                name: "feeds");
 
             migrationBuilder.DropTable(
                 name: "GoalSetting");

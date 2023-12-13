@@ -45,7 +45,8 @@ namespace TimeMate.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Required]
-            [EmailAddress]
+            [RegularExpression(@"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
+            ErrorMessage = "Invalid email address.")]
             [Display(Name = "New email")]
             public string NewEmail { get; set; }
         }

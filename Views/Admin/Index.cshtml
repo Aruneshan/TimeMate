@@ -1,0 +1,34 @@
+﻿@*@using TimeMate.Areas.Identity.Data;
+
+@model List<TimeMateUser>
+
+<h2>All Users</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>
+                    <a asp-action="Details" asp-route-Id="@user.Id">Details</a> |
+                    <a asp-action="Edit" asp-route-Id="@user.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-Id="@user.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a asp-action="Create">Create New User</a>
+</p>
+*@

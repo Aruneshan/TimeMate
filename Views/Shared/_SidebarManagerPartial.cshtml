@@ -1,17 +1,13 @@
 
-<ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
-
-
-    
+<ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" Id="accordionSidebar">
+   
     <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-controller="Home" asp-action="Index">
         <i class="fa fa-home fa-fw"></i>
         <div class="sidebar-brand-text mx-2" style="font-size:smaller">@ViewBag.Name</div>
 
     </a>
 
-
     <hr class="sidebar-divider my-0">
-
     
     <li class="nav-item active">
         <a class="nav-link" asp-controller="User" asp-action="Workspace">
@@ -29,22 +25,27 @@
     </div>
 
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" href="#" Id="navDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-cog"></i>
             <span>Workspace</span>
         </a>
         <div class="dropdown-menu" aria-labelledby="navDropdown">
-            <a class="dropdown-item" asp-action="CreateWeekSetting" asp-route-id="@ViewBag.WorkspaceId">Add Week Setting</a>
-            <a class="dropdown-item" asp-action="WeekSetting" asp-route-id="@ViewBag.WorkspaceId">Week Setting</a>
+            <a class="dropdown-item" asp-action="CreateWeekSetting" asp-route-Id="@ViewBag.WorkspaceId">Add Week Setting</a>
+            <a class="dropdown-item" asp-action="WeekSetting" asp-route-Id="@ViewBag.WorkspaceId">Week Setting</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" asp-action="Projects" asp-route-id="@ViewBag.WorkspaceId">Project List</a>
-            <a class="dropdown-item" asp-action="CreateProject" asp-route-id="@ViewBag.WorkspaceId">Add Project</a>
+            <a class="dropdown-item" asp-action="Projects" asp-route-Id="@ViewBag.WorkspaceId">Project List</a>
+            <a class="dropdown-item" asp-action="CreateProject" asp-route-Id="@ViewBag.WorkspaceId">Add Project</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" asp-action="WorkspaceTasks" asp-route-id="@ViewBag.WorkspaceId">Task List</a>
-            <a class="dropdown-item" asp-action="CreateTask" asp-route-id="@ViewBag.WorkspaceId">Add Task</a>
+            <a class="dropdown-item" asp-action="WorkspaceTasks" asp-route-Id="@ViewBag.WorkspaceId">Task List</a>
+            <a class="dropdown-item" asp-action="CreateTask" asp-route-Id="@ViewBag.WorkspaceId">Add Task</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" asp-controller="Leave" asp-action="Index">Leave Requests</a> <!-- Added Leave Requests -->
-        </div>
+            </div>
+        <li class="nav-item">
+            <a class ="nav-link" asp-controller="Leave" asp-action="Index">
+            <i class="fas fa-candy-cane"></i>
+            <span>Leave Requests</span>
+        </a> 
+        </li>
     </li>
 
     <li class="nav-item">
@@ -78,13 +79,26 @@
             <span>Permissions</span>
         </a>
     </li>
-
-
+    <li>
+        <a class ="nav-link" Id="openCalendarButton"  data-toggle="modal" data-target="#calendarModal">Open Calendar</a>
+        <div class="modal fade" Id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="calendarModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" Id="calendarModalLabel">Timesheet Calendar</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
     <hr class="sidebar-divider d-none d-md-block">
 
 
     <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        <button class="rounded-circle border-0" Id="sidebarToggle"></button>
     </div>
 
 </ul>

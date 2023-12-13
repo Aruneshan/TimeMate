@@ -13,15 +13,15 @@ namespace TimeMate.Models
     public class ChangeProjectRequests
     {
         [Key]
-        public int ChangeProjectRequestId { get; set; }
-        public string Status { get; set; }
+        public int changeProjectRequestId { get; set; }
+        public string status { get; set; }
 
         [ForeignKey("Project")]
-        public int ProjectId { get; set; }
+        public int projectId { get; set; }
         public Project Project { get; set; }
         
         [ForeignKey("TimeMateUser")]
-        public string IndividualId { get; set; }
+        public string individualId { get; set; }
         public TimeMateUser TimeMateUser { get; set; }
     }
 }

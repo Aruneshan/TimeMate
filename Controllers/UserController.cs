@@ -1,15 +1,11 @@
 ﻿using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using TimeMate.Areas.Identity.Data;
 using TimeMate.Models;
 using TimeMate.ViewModels;
-using WebMatrix.WebData;
 #nullable disable
 
 namespace TimeMate.Controllers
@@ -39,21 +35,21 @@ namespace TimeMate.Controllers
 
         //Project Manager Profile
         [Authorize(Roles = "Manager")]
-        public IActionResult ProjectMangerProfile(string id)
+        public IActionResult ProjectMangerProfile(string Id)
         {
-            if (id == null)
+            if (Id == null)
             {
                 return NotFound();
             }
-            if (_context.TimeMateUsers.SingleOrDefault(x => x.Email == id) == null)
+            if (_context.TimeMateUsers.SingleOrDefault(x => x.Email == Id) == null)
             {
                 return NotFound();
             }
-            var userid2 = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var workspace2 = _context.Workspaces.SingleOrDefault(x => x.PmId == userid2);
-            ViewBag.Name = workspace2.Name;
-            ViewBag.WorkspaceId = workspace2.WorkspaceId;
-            var user = _context.TimeMateUsers.SingleOrDefault(x => x.Email == id);
+            var accessId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var WorkArea = _context.Workspaces.SingleOrDefault(x => x.PmId == accessId);
+            ViewBag.Name = WorkArea.Name;
+            ViewBag.WorkspaceId = WorkArea.WorkspaceId;
+            var user = _context.TimeMateUsers.SingleOrDefault(x => x.Email == Id);
             var profile = new ProfileViewModel();
             profile.FullName = user.FirstName + ' ' + user.LastName;
             profile.Email = user.Email;
@@ -61,21 +57,21 @@ namespace TimeMate.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult AdminProfile(string id)
+        public IActionResult AdminProfile(string Id)
         {
-            if (id == null)
+            if (Id == null)
             {
                 return NotFound();
             }
-            if (_context.TimeMateUsers.SingleOrDefault(x => x.Email == id) == null)
+            if (_context.TimeMateUsers.SingleOrDefault(x => x.Email == Id) == null)
             {
                 return NotFound();
             }
-            var userid2 = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var workspace2 = _context.Workspaces.SingleOrDefault(x => x.PmId == userid2);
-            ViewBag.Name = workspace2.Name;
-            ViewBag.WorkspaceId = workspace2.WorkspaceId;
-            var user = _context.TimeMateUsers.SingleOrDefault(x => x.Email == id);
+            var accessId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var WorkArea = _context.Workspaces.SingleOrDefault(x => x.PmId == accessId);
+            ViewBag.Name = WorkArea.Name;
+            ViewBag.WorkspaceId = WorkArea.WorkspaceId;
+            var user = _context.TimeMateUsers.SingleOrDefault(x => x.Email == Id);
             var profile = new ProfileViewModel();
             profile.FullName = user.FirstName + ' ' + user.LastName;
             profile.Email = user.Email;
@@ -84,19 +80,19 @@ namespace TimeMate.Controllers
         }
 
         [Authorize(Roles = "Employee")]
-        public IActionResult EmployeeProfile(string id)
+        public IActionResult EmployeeProfile(string Id)
         {
-            if (id == null)
+            if (Id == null)
             {
                 return NotFound();
             }
-            if (_context.TimeMateUsers.SingleOrDefault(x => x.Email == id) == null)
+            if (_context.TimeMateUsers.SingleOrDefault(x => x.Email == Id) == null)
             {
                 return NotFound();
             }
-            var userid2 = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var workspace2 = _context.Workspaces.SingleOrDefault(x => x.PmId == userid2);
-            var user = _context.TimeMateUsers.SingleOrDefault(x => x.Email == id);
+            var accessId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var WorkArea = _context.Workspaces.SingleOrDefault(x => x.PmId == accessId);
+            var user = _context.TimeMateUsers.SingleOrDefault(x => x.Email == Id);
             var profile = new ProfileViewModel();
             profile.FullName = user.FirstName + ' ' + user.LastName;
             profile.Email = user.Email;
@@ -135,10 +131,10 @@ namespace TimeMate.Controllers
                 return RedirectToAction("Workspace");
             }
 
-            var userid2 = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var workspace2 = _context.Workspaces.SingleOrDefault(x => x.PmId == userid2);
-            ViewBag.Name = workspace2.Name;
-            ViewBag.WorkspaceId = workspace2.WorkspaceId;
+            var accessId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var WorkArea = _context.Workspaces.SingleOrDefault(x => x.PmId == accessId);
+            ViewBag.Name = WorkArea.Name;
+            ViewBag.WorkspaceId = WorkArea.WorkspaceId;
             return View(model);
         }
 
@@ -151,36 +147,27 @@ namespace TimeMate.Controllers
             var workspace_view_model = new WorkspaceListViewModel();
             var countProject = _context.Projects.Where(x => x.WorkspaceId == workspace.WorkspaceId).Count();
             ViewBag.ProjectCount = countProject;
-            //count employee added
+            // Count employee added
             var countEmployee = 0;
             var projects_list = _context.Projects.Where(x => x.WorkspaceId == workspace.WorkspaceId).ToList();
-            var project_assignment_list = _context.ProjectAssignment.Where(x => x.Status == "Accepted").ToList();
-            foreach (var a in projects_list)
+            var project_assignment_list = _context.ProjectAssignment.Where(x => x.status == "Accepted").ToList();
+            foreach (var Project in projects_list)
             {
-                foreach (var b in project_assignment_list)
-                {
-                    if (a.ProjectId == b.ProjectId)
-                    {
-                        countEmployee += countEmployee + 1;
-                    }
-                }
+                countEmployee += project_assignment_list.Count(b => b.projectId == Project.projectId);
             }
             ViewBag.EmployeeCount = countEmployee;
-            //count employee pending
+
+            // Count employee pending
             var countEmployeePending = 0;
-            var project_assignment_list_pending = _context.ProjectAssignment.Where(x => x.Status == "Pending").ToList();
-            foreach (var a in projects_list)
+            var project_assignment_list_pending = _context.ProjectAssignment.Where(x => x.status == "Pending").ToList();
+            foreach (var Project in projects_list)
             {
-                foreach (var b in project_assignment_list_pending)
-                {
-                    if (a.ProjectId == b.ProjectId)
-                    {
-                        countEmployeePending += countEmployeePending + 1;
-                    }
-                }
+                countEmployeePending += project_assignment_list_pending.Count(b => b.projectId == Project.projectId);
             }
             ViewBag.EmployeeCountPending = countEmployeePending;
             //Productiivty
+
+
             var project_list = _context.Projects.Where(x => x.WorkspaceId == workspace.WorkspaceId).ToList();
             var EmployeeIds = new List<EmployeeIdViewModel>();
             var DifferentEmployeeInTimesheet = _context.TimeSheets.GroupBy(t => t.EmployeeId).Select(g => g.First()).ToList();
@@ -190,9 +177,9 @@ namespace TimeMate.Controllers
                 var countHours = 0;
                 var productivity = new ProductivityViewModel();
 
-                foreach (var project in project_list)
+                foreach (var Project in project_list)
                 {
-                    var totalTimesheet = _context.TimeSheets.Where(x => x.Status == "Accepetd" && x.ProjectId == project.ProjectId).ToList();
+                    var totalTimesheet = _context.TimeSheets.Where(x => x.status == "Accepetd" && x.projectId == Project.projectId).ToList();
                     for (var i = 0; i < totalTimesheet.Count(); i++)
                     {
                         if (a.EmployeeId == totalTimesheet[i].EmployeeId)
@@ -227,6 +214,7 @@ namespace TimeMate.Controllers
             }
             return View(workspace_view_model);
         }
+
         [Authorize(Roles = "Admin")]
         //Workspace
         public IActionResult AdminWorkSpace()
@@ -239,12 +227,12 @@ namespace TimeMate.Controllers
             //count eemployee added
             var countEmployee = 0;
             var projects_list = _context.Projects.Where(x => x.WorkspaceId == workspace.WorkspaceId).ToList();
-            var project_assignment_list = _context.ProjectAssignment.Where(x => x.Status == "Accepted").ToList();
+            var project_assignment_list = _context.ProjectAssignment.Where(x => x.status == "Accepted").ToList();
             foreach (var a in projects_list)
             {
                 foreach (var b in project_assignment_list)
                 {
-                    if (a.ProjectId == b.ProjectId)
+                    if (a.projectId == b.projectId)
                     {
                         countEmployee += countEmployee + 1;
                     }
@@ -253,12 +241,12 @@ namespace TimeMate.Controllers
             ViewBag.EmployeeCount = countEmployee;
             //count employee pending
             var countEmployeePending = 0;
-            var project_assignment_list_pending = _context.ProjectAssignment.Where(x => x.Status == "Pending").ToList();
+            var project_assignment_list_pending = _context.ProjectAssignment.Where(x => x.status == "Pending").ToList();
             foreach (var a in projects_list)
             {
                 foreach (var b in project_assignment_list_pending)
                 {
-                    if (a.ProjectId == b.ProjectId)
+                    if (a.projectId == b.projectId)
                     {
                         countEmployeePending += countEmployeePending + 1;
                     }
@@ -275,9 +263,9 @@ namespace TimeMate.Controllers
                 var countHours = 0;
                 var productivity = new ProductivityViewModel();
 
-                foreach (var project in project_list)
+                foreach (var Project in project_list)
                 {
-                    var totalTimesheet = _context.TimeSheets.Where(x => x.Status == "Accepetd" && x.ProjectId == project.ProjectId).ToList();
+                    var totalTimesheet = _context.TimeSheets.Where(x => x.status == "Accepetd" && x.projectId == Project.projectId).ToList();
                     for (var i = 0; i < totalTimesheet.Count(); i++)
                     {
                         if (a.EmployeeId == totalTimesheet[i].EmployeeId)
@@ -315,7 +303,7 @@ namespace TimeMate.Controllers
 
         [Authorize(Roles = "Manager")]
         //Create Project/WorkspaceId
-        public IActionResult CreateProject(int id)
+        public IActionResult CreateProject(int Id)
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid);
@@ -328,22 +316,22 @@ namespace TimeMate.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateProject(ProjectViewModel model, int id)
+        public IActionResult CreateProject(ProjectViewModel model, int Id)
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid && x.WorkspaceId == id);
+            var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid && x.WorkspaceId == Id);
 
             if (ModelState.IsValid)
             {
-                var project = new Project();
-                project.Name = model.Name;
-                project.Description = model.Description;
-                project.DateCreated = DateTime.Now.Date;
-                project.WorkspaceId = workspace.WorkspaceId;
+                var Project = new Project();
+                Project.Name = model.Name;
+                Project.description = model.description;
+                Project.DateCreated = DateTime.Now.Date;
+                Project.WorkspaceId = workspace.WorkspaceId;
 
-                _context.Projects.Add(project);
+                _context.Projects.Add(Project);
                 _context.SaveChanges();
-                return RedirectToAction("Projects", new { Id = id });
+                return RedirectToAction("Projects", new { Id = Id });
             }
             ViewBag.Name = workspace.Name;
             ViewBag.WorkspaceId = workspace.WorkspaceId;
@@ -352,63 +340,122 @@ namespace TimeMate.Controllers
 
         [Authorize(Roles = "Manager,Admin")]
         //Projects/WorkspaceId
-        public IActionResult Projects(string searchString, int id)
+        public IActionResult Projects(string searchString, int Id, int page = 1, int pageSize = 5)
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid);
 
             List<Project> ProjectList = new List<Project>();
+
             if (!string.IsNullOrEmpty(searchString))
             {
-                var b = _context.Projects.Where(s => s.Name.Contains(searchString));
-                foreach (var a in b)
-                {
-                    if (a.WorkspaceId == workspace.WorkspaceId)
-                    {
-                        ProjectList.Add(a);
-                    }
-                }
+                var filteredProjects = _context.Projects
+                    .Where(s => s.Name.Contains(searchString) && s.WorkspaceId == workspace.WorkspaceId)
+                    .ToList();
+
+                ProjectList.AddRange(filteredProjects);
             }
             else
             {
-                foreach (var a in _context.Projects.ToList())
-                {
-                    if (a.WorkspaceId == workspace.WorkspaceId)
-                    {
-                        ProjectList.Add(a);
-                    }
-                }
+                var allProjects = _context.Projects
+                    .Where(s => s.WorkspaceId == workspace.WorkspaceId)
+                    .ToList();
+
+                ProjectList.AddRange(allProjects);
             }
+
+            // Calculate total pages for pagination
+            int totalProjects = ProjectList.Count();
+            int totalPages = (int)Math.Ceiling((double)totalProjects / pageSize);
+
+            // Paginate the results
+            var paginatedProjects = ProjectList
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
             var project_list = new ProjectListViewModel
             {
-                ProjectsList = ProjectList
+                ProjectsList = paginatedProjects
             };
+
             ViewBag.Name = workspace.Name;
             ViewBag.WorkspaceId = workspace.WorkspaceId;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.CurrentPage = page;
+            ViewBag.SearchString = searchString; // Add searchString to ViewBag for the pagination links
+
             return View(project_list);
         }
 
+        // [Authorize(Roles = "Manager,Admin")]
+        // public IActionResult Projects(string searchString, int Id)
+        // {
+        //     var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //     var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid);
+
+        //     List<Project> ProjectList = new List<Project>();
+
+        //     if (!string.IsNullOrEmpty(searchString))
+        //     {
+        //         // Filter projects based on both name and workspace
+        //         ProjectList = _context.Projects
+        //             .Where(p => p.Name.Contains(searchString) && p.WorkspaceId == workspace.WorkspaceId)
+        //             .ToList();
+        //     }
+        //     else
+        //     {
+        //         // Get all projects for the workspace
+        //         ProjectList = _context.Projects
+        //             .Where(p => p.WorkspaceId == workspace.WorkspaceId)
+        //             .ToList();
+        //     }
+        //     //Console.WriteLine($"Search String: {searchString}");
+        //     // to Check filter works correctly
+        //     var totalProjects = projectQuery.Count();
+        //     var projectsList = projectQuery.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+
+        //     var project_list = new ProjectListViewModel
+        //     {
+        //         ProjectsList = ProjectList
+        //     };
+
+        //     ViewBag.Name = workspace.Name;
+        //     ViewBag.WorkspaceId = workspace.WorkspaceId;
+
+        //     var viewModel = new ProjectListViewModel
+        //     {
+        //         projectsList = projectsList,
+        //         PageIndex = pageIndex,
+        //         PageSize = pageSize,
+        //         TotalProjects = totalProjects
+        //     };
+
+
+        //     return View(project_list);
+        // }
+
         //Add Project Members
         [Authorize(Roles = "Manager,Admin")]
-        public IActionResult AddProjectMember(int id)
+        public IActionResult AddProjectMember(int Id)
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid);
             ViewBag.Name = workspace.Name;
             ViewBag.WorkspaceId = workspace.WorkspaceId;
 
-            ViewBag.ProjectId = id;
+            ViewBag.projectId = Id;
             return View();
         }
 
         [HttpPost]
-        public IActionResult AddProjectMember(int id, ProjectAssignmentViewModel model)
+        public IActionResult AddProjectMember(int Id, ProjectAssignmentViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var project = _context.Projects.SingleOrDefault(x => x.ProjectId == id);
+                var Project = _context.Projects.SingleOrDefault(x => x.projectId == Id);
 
-                if (_context.TimeMateUsers.SingleOrDefault(x => x.Email == model.SearchEmail) == null)
+                if (_context.TimeMateUsers.SingleOrDefault(x => x.Email == model.searchEmail) == null)
                 {
                     var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                     var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid);
@@ -421,9 +468,9 @@ namespace TimeMate.Controllers
                     return View(model);
                 }
 
-                var individual = _context.TimeMateUsers.SingleOrDefault(x => x.Email == model.SearchEmail);
+                var individual = _context.TimeMateUsers.SingleOrDefault(x => x.Email == model.searchEmail);
 
-                if (_context.ProjectAssignment.Any(x => x.ProjectId == project.ProjectId && x.EmployeeId == individual.Id))
+                if (_context.ProjectAssignment.Any(x => x.projectId == Project.projectId && x.EmployeeId == individual.Id))
                 {
                     var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                     var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid);
@@ -431,16 +478,16 @@ namespace TimeMate.Controllers
                     ViewBag.Name = workspace.Name;
                     ViewBag.WorkspaceId = workspace.WorkspaceId;
 
-                    ModelState.AddModelError("CustomError", "User with this email is already member of this project");
+                    ModelState.AddModelError("CustomError", "User with this email is already member of this Project");
 
                     return View(model);
                 }
                 //Check if user is ProjectManager
-                var employee = _context.TimeMateUsers.SingleOrDefault(x => x.Email == model.SearchEmail);
+                var employee = _context.TimeMateUsers.SingleOrDefault(x => x.Email == model.searchEmail);
                 var roleId = _context.UserRoles.SingleOrDefault(x => x.UserId == employee.Id).RoleId;
                 var role = _context.Roles.SingleOrDefault(x => x.Id == roleId).Name;
 
-                if (role != "Employee")
+                if (role != "employee")
                 {
                     var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                     var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid);
@@ -449,35 +496,35 @@ namespace TimeMate.Controllers
                     ModelState.AddModelError("CustomError", "User with this email does not exist");
                     return View(model);
                 }
-                if (individual != null && project != null)
+                if (individual != null && Project != null)
                 {
                     var Project_Assignment = new ProjectAssignment();
                     Project_Assignment.EmployeeId = individual.Id;
-                    Project_Assignment.ProjectId = project.ProjectId;
-                    Project_Assignment.Status = "Pending";
+                    Project_Assignment.projectId = Project.projectId;
+                    Project_Assignment.status = "Pending";
                     _context.ProjectAssignment.Add(Project_Assignment);
                     _context.SaveChanges();
-                    return RedirectToAction("ProjectMembers", new { Id = id });
+                    return RedirectToAction("ProjectMembers", new { Id = Id });
                 }
                 else
                 {
 
                 }
             }
-            var userid2 = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var workspace2 = _context.Workspaces.SingleOrDefault(x => x.PmId == userid2);
-            ViewBag.Name = workspace2.Name;
-            ViewBag.WorkspaceId = workspace2.WorkspaceId;
+            var accessId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var WorkArea = _context.Workspaces.SingleOrDefault(x => x.PmId == accessId);
+            ViewBag.Name = WorkArea.Name;
+            ViewBag.WorkspaceId = WorkArea.WorkspaceId;
             return View(model);
         }
 
 
         [Authorize(Roles = "Manager,Admin")]
         //Members List
-        public IActionResult ProjectMembers(int id)
+        public IActionResult ProjectMembers(int Id)
         {
-            var project = _context.Projects.SingleOrDefault(x => x.ProjectId == id);
-            var project_members = _context.ProjectAssignment.Where(x => x.ProjectId == id).ToList();
+            var Project = _context.Projects.SingleOrDefault(x => x.projectId == Id);
+            var project_members = _context.ProjectAssignment.Where(x => x.projectId == Id).ToList();
 
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid);
@@ -485,7 +532,7 @@ namespace TimeMate.Controllers
             ViewBag.WorkspaceId = workspace.WorkspaceId;
 
             var project_members_viewmodel_list = new List<MembersList>();
-            if (project_members != null && project != null)
+            if (project_members != null && Project != null)
             {
                 foreach (var a in project_members)
                 {
@@ -493,7 +540,7 @@ namespace TimeMate.Controllers
                     project_members_viewmodel.MemberEmail = _context.TimeMateUsers.SingleOrDefault(x => x.Id == a.EmployeeId).Email;
                     project_members_viewmodel.ProjectAssignmentId = a.ProjectAssignmentId;
                     project_members_viewmodel.IndividualUserId = a.EmployeeId;
-                    project_members_viewmodel.ProjectId = a.ProjectId;
+                    project_members_viewmodel.projectId = a.projectId;
                     project_members_viewmodel_list.Add(project_members_viewmodel);
                 }
             }
@@ -501,36 +548,36 @@ namespace TimeMate.Controllers
         }
 
         //RemoveProjectMember/ProjectAssignmentId
-        public IActionResult RemoveProjectMember(int id)
+        public IActionResult RemoveProjectMember(int Id)
         {
-            var project_assigned = _context.ProjectAssignment.SingleOrDefault(x => x.ProjectAssignmentId == id);
+            var project_assigned = _context.ProjectAssignment.SingleOrDefault(x => x.ProjectAssignmentId == Id);
             if (project_assigned != null)
             {
                 _context.ProjectAssignment.Remove(project_assigned);
                 _context.SaveChanges();
-                return RedirectToAction("ProjectMembers", new { Id = id });
+                return RedirectToAction("ProjectMembers", new { Id = Id });
             }
-            return RedirectToAction("ProjectMembers", new { Id = id });
+            return RedirectToAction("ProjectMembers", new { Id = Id });
         }
 
         //Create Task for Workspace
         //CreateTask/WorkspaceId
         [Authorize(Roles = "Manager,Admin")]
-        public IActionResult CreateTask(int id)
+        public IActionResult CreateTask(int Id)
         {
-            ViewBag.WorkspaceId = id;
-            ViewBag.Name = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == id).Name;
+            ViewBag.WorkspaceId = Id;
+            ViewBag.Name = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == Id).Name;
             return View();
         }
 
         [HttpPost]
-        public IActionResult CreateTask(int id, CreateTaskViewModel model)
+        public IActionResult CreateTask(int Id, CreateTaskViewModel model)
         {
 
             if (ModelState.IsValid)
             {
                 var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var workspace = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == id && x.PmId == userid);
+                var workspace = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == Id && x.PmId == userid);
                 if (workspace != null)
                 {
                     if (_context.Tasks.Any(x => x.TaskName == model.TaskName))
@@ -548,24 +595,24 @@ namespace TimeMate.Controllers
                     task.WorkspaceId = workspace.WorkspaceId;
                     _context.Tasks.Add(task);
                     _context.SaveChanges();
-                    return RedirectToAction("WorkspaceTasks", new { Id = id });
+                    return RedirectToAction("WorkspaceTasks", new { Id = Id });
                 }
             }
-            var userid2 = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var workspace2 = _context.Workspaces.SingleOrDefault(x => x.PmId == userid2);
-            ViewBag.Name = workspace2.Name;
-            ViewBag.WorkspaceId = workspace2.WorkspaceId;
+            var accessId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var WorkArea = _context.Workspaces.SingleOrDefault(x => x.PmId == accessId);
+            ViewBag.Name = WorkArea.Name;
+            ViewBag.WorkspaceId = WorkArea.WorkspaceId;
             return View(model);
         }
 
         [Authorize(Roles = "Manager,Admin")]
         //Workspace Tasks/WorkspaceId
-        public IActionResult WorkspaceTasks(int id)
+        public IActionResult WorkspaceTasks(int Id)
         {
-            ViewBag.WorkspaceId = id;
-            ViewBag.Name = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == id).Name;
+            ViewBag.WorkspaceId = Id;
+            ViewBag.Name = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == Id).Name;
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var workspace = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == id && x.PmId == userid);
+            var workspace = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == Id && x.PmId == userid);
             var task_list = new List<TaskListViewModel>();
             if (workspace != null)
             {
@@ -581,15 +628,15 @@ namespace TimeMate.Controllers
         }
 
         //WeekSetting/WorkspaceId
-        public IActionResult CreateWeekSetting(int id)
+        public IActionResult CreateWeekSetting(int Id)
         {
-            ViewBag.WorkspaceId = id;
-            ViewBag.Name = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == id).Name;
+            ViewBag.WorkspaceId = Id;
+            ViewBag.Name = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == Id).Name;
             return View();
         }
 
         [HttpPost]
-        public IActionResult CreateWeekSetting(int id, CreateWeekSettingViewModel model)
+        public IActionResult CreateWeekSetting(int Id, CreateWeekSettingViewModel model)
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid);
@@ -597,7 +644,7 @@ namespace TimeMate.Controllers
             {
                 if (workspace != null)
                 {
-                    if (_context.WeekSettings.Where(x => x.WorkspaceId == id).Any())
+                    if (_context.WeekSettings.Where(x => x.WorkspaceId == Id).Any())
                     {
                         ViewBag.Name = workspace.Name;
                         ViewBag.WorkspaceId = workspace.WorkspaceId;
@@ -607,13 +654,13 @@ namespace TimeMate.Controllers
                     else
                     {
                         var weekSetting = new WeekSetting();
-                        weekSetting.WorkspaceId = id;
-                        weekSetting.StartDate = model.StartDate;
+                        weekSetting.WorkspaceId = Id;
+                        weekSetting.startDate = model.startDate;
                         weekSetting.StartDay = model.StartDay.ToString();
                         weekSetting.EndDay = model.EndDay.ToString();
                         _context.WeekSettings.Add(weekSetting);
                         _context.SaveChanges();
-                        return RedirectToAction("WeekSetting", new { Id = id });
+                        return RedirectToAction("WeekSetting", new { Id = Id });
                     }
 
                 }
@@ -624,20 +671,20 @@ namespace TimeMate.Controllers
         }
 
         //Week Setting/WorkspaceId
-        public IActionResult WeekSetting(int id)
+        public IActionResult WeekSetting(int Id)
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var workspace = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == id && x.PmId == userid);
+            var workspace = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == Id && x.PmId == userid);
             ViewBag.WorkspaceId = workspace.WorkspaceId;
             ViewBag.Name = workspace.Name;
             var showWeekSetting = new ShowWeekSetting();
             if (workspace != null)
             {
-                var weekSetting = _context.WeekSettings.SingleOrDefault(x => x.WorkspaceId == id);
+                var weekSetting = _context.WeekSettings.SingleOrDefault(x => x.WorkspaceId == Id);
                 if (weekSetting != null)
                 {
                     showWeekSetting.WeekSettingId = weekSetting.WeekSettingId;
-                    showWeekSetting.StartDate = weekSetting.StartDate;
+                    showWeekSetting.startDate = weekSetting.startDate;
                     showWeekSetting.StartDay = weekSetting.StartDay;
                     showWeekSetting.EndDay = weekSetting.EndDay;
                 }
@@ -646,13 +693,13 @@ namespace TimeMate.Controllers
         }
 
         //EditWeekSetting/WeekSettingId
-        public IActionResult EditWeekSetting(int id)
+        public IActionResult EditWeekSetting(int Id)
         {
-            if (id == 0)
+            if (Id == 0)
             {
                 return NotFound();
             }
-            var weekSetting = _context.WeekSettings.SingleOrDefault(x => x.WeekSettingId == id);
+            var weekSetting = _context.WeekSettings.SingleOrDefault(x => x.WeekSettingId == Id);
             if (weekSetting == null)
             {
                 return NotFound();
@@ -662,44 +709,44 @@ namespace TimeMate.Controllers
             ViewBag.WorkspaceId = workspace.WorkspaceId;
             ViewBag.Name = workspace.Name;
             var week_setting = new EditWeekSetting();
-            week_setting.StartDate = weekSetting.StartDate;
+            week_setting.startDate = weekSetting.startDate;
             week_setting.StartDay = weekSetting.StartDay;
             week_setting.EndDay = weekSetting.EndDay;
             return View(week_setting);
         }
 
         [HttpPost]
-        public IActionResult EditWeekSetting(int id, EditWeekSetting model)
+        public IActionResult EditWeekSetting(int Id, EditWeekSetting model)
         {
-            if (id == 0)
+            if (Id == 0)
             {
                 return NotFound();
             }
             if (ModelState.IsValid)
             {
-                var weekSetting = _context.WeekSettings.SingleOrDefault(x => x.WeekSettingId == id);
-                weekSetting.StartDate = model.StartDate;
+                var weekSetting = _context.WeekSettings.SingleOrDefault(x => x.WeekSettingId == Id);
+                weekSetting.startDate = model.startDate;
                 weekSetting.StartDay = model.StartDay;
                 weekSetting.EndDay = model.EndDay;
                 _context.Update(weekSetting);
                 _context.SaveChanges();
-                return RedirectToAction("WeekSetting", new { Id = _context.WeekSettings.SingleOrDefault(x => x.WeekSettingId == id).WorkspaceId });
+                return RedirectToAction("WeekSetting", new { Id = _context.WeekSettings.SingleOrDefault(x => x.WeekSettingId == Id).WorkspaceId });
             }
-            var userid2 = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var workspace2 = _context.Workspaces.SingleOrDefault(x => x.PmId == userid2);
-            ViewBag.Name = workspace2.Name;
-            ViewBag.WorkspaceId = workspace2.WorkspaceId;
+            var accessId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var WorkArea = _context.Workspaces.SingleOrDefault(x => x.PmId == accessId);
+            ViewBag.Name = WorkArea.Name;
+            ViewBag.WorkspaceId = WorkArea.WorkspaceId;
             return View(model);
         }
 
         //Delete Setting/WeekSettingId
-        public IActionResult DeleteSetting(int id)
+        public IActionResult DeleteSetting(int Id)
         {
-            if (id == 0)
+            if (Id == 0)
             {
                 return NotFound();
             }
-            var weekSetting = _context.WeekSettings.SingleOrDefault(x => x.WeekSettingId == id);
+            var weekSetting = _context.WeekSettings.SingleOrDefault(x => x.WeekSettingId == Id);
             if (weekSetting == null)
             {
                 return NotFound();
@@ -711,9 +758,9 @@ namespace TimeMate.Controllers
             return View(weekSetting);
         }
 
-        public IActionResult DeleteSettingConfirmed(int id)
+        public IActionResult DeleteSettingConfirmed(int Id)
         {
-            var weekSetting = _context.WeekSettings.SingleOrDefault(x => x.WeekSettingId == id);
+            var weekSetting = _context.WeekSettings.SingleOrDefault(x => x.WeekSettingId == Id);
             _context.WeekSettings.Remove(weekSetting);
             _context.SaveChanges();
             return RedirectToAction("Workspace");
@@ -724,17 +771,17 @@ namespace TimeMate.Controllers
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var total_invitation_requests = _context.ProjectAssignment.Where(x => x.Status == "Pending").ToList();
+            var total_invitation_requests = _context.ProjectAssignment.Where(x => x.status == "Pending").ToList();
             List<InvitationRequestsViewModel> user_invitations = new List<InvitationRequestsViewModel>();
             foreach (var a in total_invitation_requests)
             {
                 var u_invitation = new InvitationRequestsViewModel();
                 if (a.EmployeeId == userid)
                 {
-                    u_invitation.ProjectName = _context.Projects.SingleOrDefault(x => x.ProjectId == a.ProjectId).Name;
-                    u_invitation.ProjectDescription = _context.Projects.SingleOrDefault(x => x.ProjectId == a.ProjectId).Description;
+                    u_invitation.ProjectName = _context.Projects.SingleOrDefault(x => x.projectId == a.projectId).Name;
+                    u_invitation.ProjectDescription = _context.Projects.SingleOrDefault(x => x.projectId == a.projectId).description;
                     u_invitation.InvitationId = a.ProjectAssignmentId;
-                    u_invitation.Status = a.Status;
+                    u_invitation.status = a.status;
                     user_invitations.Add(u_invitation);
                 }
             }
@@ -743,12 +790,12 @@ namespace TimeMate.Controllers
 
         //Accept Invitations/InvitationId
         [Authorize(Roles = "Employee")]
-        public IActionResult AcceptInvitation(int id)
+        public IActionResult AcceptInvitation(int Id)
         {
-            var project_assignment = _context.ProjectAssignment.SingleOrDefault(x => x.ProjectAssignmentId == id);
+            var project_assignment = _context.ProjectAssignment.SingleOrDefault(x => x.ProjectAssignmentId == Id);
             if (project_assignment != null)
             {
-                project_assignment.Status = "Accepted";
+                project_assignment.status = "Accepted";
                 _context.ProjectAssignment.Update(project_assignment);
                 _context.SaveChanges();
                 return RedirectToAction("IndividualDashboard");
@@ -765,16 +812,16 @@ namespace TimeMate.Controllers
         public IActionResult DailyTimesheets()
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var total_accepted_invitation = _context.ProjectAssignment.Where(x => x.Status == "Accepted").ToList();
+            var total_accepted_invitation = _context.ProjectAssignment.Where(x => x.status == "Accepted").ToList();
             List<DailyTimesheetViewModel> daily_timesheets = new List<DailyTimesheetViewModel>();
             foreach (var a in total_accepted_invitation)
             {
                 var dailyTimesheet = new DailyTimesheetViewModel();
                 if (a.EmployeeId == userid)
                 {
-                    dailyTimesheet.ProjectName = _context.Projects.SingleOrDefault(x => x.ProjectId == a.ProjectId).Name;
-                    dailyTimesheet.ProjectDescription = _context.Projects.SingleOrDefault(x => x.ProjectId == a.ProjectId).Description;
-                    dailyTimesheet.ProjectId = _context.Projects.SingleOrDefault(x => x.ProjectId == a.ProjectId).ProjectId;
+                    dailyTimesheet.ProjectName = _context.Projects.SingleOrDefault(x => x.projectId == a.projectId).Name;
+                    dailyTimesheet.ProjectDescription = _context.Projects.SingleOrDefault(x => x.projectId == a.projectId).description;
+                    dailyTimesheet.projectId = _context.Projects.SingleOrDefault(x => x.projectId == a.projectId).projectId;
                     daily_timesheets.Add(dailyTimesheet);
                 }
             }
@@ -782,25 +829,25 @@ namespace TimeMate.Controllers
         }
 
         [Authorize(Roles = "Employee")]
-        //FillTimesheet/ProjectId
-        public IActionResult FillTimeSheet(int id)
+        //FillTimesheet/projectId
+        public IActionResult FillTimeSheet(int Id)
         {
-            if (id == 0)
+            if (Id == 0)
             {
                 return NotFound();
             }
-            if (_context.Projects.SingleOrDefault(x => x.ProjectId == id) == null)
+            if (_context.Projects.SingleOrDefault(x => x.projectId == Id) == null)
             {
                 return NotFound();
             }
-            var project = _context.Projects.SingleOrDefault(x => x.ProjectId == id);
-            if (_context.WeekSettings.SingleOrDefault(x => x.WorkspaceId == project.WorkspaceId) == null)
+            var Project = _context.Projects.SingleOrDefault(x => x.projectId == Id);
+            if (_context.WeekSettings.SingleOrDefault(x => x.WorkspaceId == Project.WorkspaceId) == null)
             {
                 return RedirectToAction("AccessDenie");
             }
             else
             {
-                var workspace = _context.Workspaces.SingleOrDefault(y => y.WorkspaceId == project.WorkspaceId);
+                var workspace = _context.Workspaces.SingleOrDefault(y => y.WorkspaceId == Project.WorkspaceId);
                 var taskList = _context.Tasks.Where(z => z.WorkspaceId == workspace.WorkspaceId).ToList();
                 var listItems = new List<SelectListItem>();
                 foreach (var a in taskList)
@@ -813,9 +860,9 @@ namespace TimeMate.Controllers
         }
 
         [HttpPost]
-        public IActionResult FillTimeSheet(int id, CreateTimesheetViewModel model)
+        public IActionResult FillTimeSheet(int Id, CreateTimesheetViewModel model)
         {
-            var p = _context.Projects.SingleOrDefault(x => x.ProjectId == id);
+            var p = _context.Projects.SingleOrDefault(x => x.projectId == Id);
             if (_context.WeekSettings.SingleOrDefault(x => x.WorkspaceId == p.WorkspaceId) == null)
             {
                 return RedirectToAction("AccessDenie");
@@ -824,8 +871,8 @@ namespace TimeMate.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var project = _context.Projects.SingleOrDefault(x => x.ProjectId == id);
-                    if (project != null)
+                    var Project = _context.Projects.SingleOrDefault(x => x.projectId == Id);
+                    if (Project != null)
                     {
                         var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                         var timeSheet = new TimeSheet();
@@ -833,59 +880,59 @@ namespace TimeMate.Controllers
                         timeSheet.Task = model.Task;
                         timeSheet.TaskType = model.TaskType;
                         timeSheet.HoursSpent = model.HoursSpent;
-                        timeSheet.Status = "Saved";
+                        timeSheet.status = "Saved";
                         timeSheet.EmployeeId = userid;
-                        timeSheet.ProjectId = id;
+                        timeSheet.projectId = Id;
                         _context.TimeSheets.Add(timeSheet);
                         _context.SaveChanges();
-                        return RedirectToAction("ShowTimeSheet", new { Id = id });
+                        return RedirectToAction("ShowTimeSheet", new { Id = Id });
                     }
                 }
-                var userid2 = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var workspace2 = _context.Workspaces.SingleOrDefault(x => x.PmId == userid2);
-                ViewBag.Name = workspace2.Name;
-                ViewBag.WorkspaceId = workspace2.WorkspaceId;
+                var accessId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var WorkArea = _context.Workspaces.SingleOrDefault(x => x.PmId == accessId);
+                ViewBag.Name = WorkArea.Name;
+                ViewBag.WorkspaceId = WorkArea.WorkspaceId;
                 return View(model);
             }
         }
 
         [Authorize(Roles = "Employee")]
-        //DisplayTimesheet/ProjectId
-        public IActionResult ShowTimeSheet(int id)
+        //DisplayTimesheet/projectId
+        public IActionResult ShowTimeSheet(int Id)
         {
-            if (id == 0)
+            if (Id == 0)
             {
                 return NotFound();
             }
-            var project = _context.Projects.SingleOrDefault(x => x.ProjectId == id);
-            var pmId = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == project.WorkspaceId).PmId;
+            var Project = _context.Projects.SingleOrDefault(x => x.projectId == Id);
+            var pmId = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == Project.WorkspaceId).PmId;
             //ProjectManagerId
             //Check if its EndDay of week
-            //If it is than send this id
-            if (_context.WeekSettings.SingleOrDefault(x => x.WorkspaceId == project.WorkspaceId) == null)
+            //If it is than send this Id
+            if (_context.WeekSettings.SingleOrDefault(x => x.WorkspaceId == Project.WorkspaceId) == null)
             {
                 return RedirectToAction("AccessDenie");
             }
-            var startDate = _context.WeekSettings.SingleOrDefault(x => x.WorkspaceId == project.WorkspaceId).StartDate;
-            var startDay = _context.WeekSettings.SingleOrDefault(x => x.WorkspaceId == project.WorkspaceId).StartDay;
-            var endDay = _context.WeekSettings.SingleOrDefault(x => x.WorkspaceId == project.WorkspaceId).EndDay;
+            var startDate = _context.WeekSettings.SingleOrDefault(x => x.WorkspaceId == Project.WorkspaceId).startDate;
+            var startDay = _context.WeekSettings.SingleOrDefault(x => x.WorkspaceId == Project.WorkspaceId).StartDay;
+            var endDay = _context.WeekSettings.SingleOrDefault(x => x.WorkspaceId == Project.WorkspaceId).EndDay;
             var DateNow = DateTime.Now;
             if (DateNow.DayOfWeek.ToString() == endDay)
             {
                 ViewBag.ProjectManagerId = pmId;
-                ViewBag.projectId = id;
+                ViewBag.projectId = Id;
             }
 
-            if (project == null)
+            if (Project == null)
             {
                 return NotFound();
             }
-            var listOftimeSheet = _context.TimeSheets.Where(x => x.ProjectId == id).ToList();
+            var listOftimeSheet = _context.TimeSheets.Where(x => x.projectId == Id).ToList();
             var listOfDisplayTimeSheet = new List<DisplayTimeSheet>();
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             foreach (var a in listOftimeSheet)
             {
-                if (a.EmployeeId == userid && (a.Status == "Saved" || a.Status == "Rejected"))
+                if (a.EmployeeId == userid && (a.status == "Saved" || a.status == "Rejected"))
                 {
                     var displayTimesheet = new DisplayTimeSheet();
                     displayTimesheet.Date = a.Date;
@@ -893,7 +940,7 @@ namespace TimeMate.Controllers
                     displayTimesheet.TaskType = a.TaskType;
                     displayTimesheet.HoursSpent = a.HoursSpent;
                     displayTimesheet.TimeSheetId = a.TimeSheetId;
-                    displayTimesheet.Status = a.Status;
+                    displayTimesheet.status = a.status;
                     listOfDisplayTimeSheet.Add(displayTimesheet);
                 }
             }
@@ -902,25 +949,25 @@ namespace TimeMate.Controllers
 
 
         [Authorize(Roles = "Employee")]
-        //DisplayTimesheetViewOnly/ProjectId
-        public IActionResult ShowTimeSheetViewOnly(int id)
+        //DisplayTimesheetViewOnly/projectId
+        public IActionResult ShowTimeSheetViewOnly(int Id)
         {
-            if (id == 0)
+            if (Id == 0)
             {
                 return NotFound();
             }
-            var project = _context.Projects.SingleOrDefault(x => x.ProjectId == id);
+            var Project = _context.Projects.SingleOrDefault(x => x.projectId == Id);
 
-            if (project == null)
+            if (Project == null)
             {
                 return NotFound();
             }
-            var listOftimeSheet = _context.TimeSheets.Where(x => x.ProjectId == id).ToList();
+            var listOftimeSheet = _context.TimeSheets.Where(x => x.projectId == Id).ToList();
             var listOfDisplayTimeSheet = new List<DisplayTimeSheet>();
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             foreach (var a in listOftimeSheet)
             {
-                if (a.EmployeeId == userid && (a.Status == "Submitted" || a.Status == "Rejected"))
+                if (a.EmployeeId == userid && (a.status == "Submitted" || a.status == "Rejected"))
                 {
                     var displayTimesheet = new DisplayTimeSheet();
                     displayTimesheet.Date = a.Date;
@@ -928,7 +975,7 @@ namespace TimeMate.Controllers
                     displayTimesheet.TaskType = a.TaskType;
                     displayTimesheet.HoursSpent = a.HoursSpent;
                     displayTimesheet.TimeSheetId = a.TimeSheetId;
-                    displayTimesheet.Status = a.Status;
+                    displayTimesheet.status = a.status;
                     listOfDisplayTimeSheet.Add(displayTimesheet);
                 }
             }
@@ -937,14 +984,14 @@ namespace TimeMate.Controllers
 
         [Authorize(Roles = "Employee")]
         //EditTimeSheet/TimesheetId
-        public IActionResult EditTimeSheet(int id)
+        public IActionResult EditTimeSheet(int Id)
         {
-            if (id == 0)
+            if (Id == 0)
             {
                 return NotFound();
             }
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var timeSheet = _context.TimeSheets.SingleOrDefault(x => x.TimeSheetId == id && x.EmployeeId == userid);
+            var timeSheet = _context.TimeSheets.SingleOrDefault(x => x.TimeSheetId == Id && x.EmployeeId == userid);
             if (timeSheet == null)
             {
                 return NotFound();
@@ -958,42 +1005,42 @@ namespace TimeMate.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditTimeSheet(int id, EditTimeSheetViewModel model)
+        public IActionResult EditTimeSheet(int Id, EditTimeSheetViewModel model)
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var timeSheet = _context.TimeSheets.SingleOrDefault(x => x.TimeSheetId == id && x.EmployeeId == userid);
+            var timeSheet = _context.TimeSheets.SingleOrDefault(x => x.TimeSheetId == Id && x.EmployeeId == userid);
             timeSheet.Date = model.Date;
             timeSheet.Task = model.Task;
             timeSheet.TaskType = model.TaskType;
             timeSheet.HoursSpent = model.HoursSpent;
             _context.TimeSheets.Update(timeSheet);
             _context.SaveChanges();
-            return RedirectToAction("ShowTimeSheet", new { Id = _context.TimeSheets.SingleOrDefault(x => x.TimeSheetId == id).ProjectId });
+            return RedirectToAction("ShowTimeSheet", new { Id = _context.TimeSheets.SingleOrDefault(x => x.TimeSheetId == Id).projectId });
         }
 
         [Authorize(Roles = "Employee")]
         //Submit Timesheet To Manager
-        //SubmitTimesheetToManager/ManagerId/ProjectId
+        //SubmitTimesheetToManager/ManagerId/projectId
 
         [HttpPost]
-        public IActionResult SubmitTimesheetToManager(string id, int id2)
+        public IActionResult SubmitTimesheetToManager(string Id, int id2)
         {
-            if (_context.TimeMateUsers.SingleOrDefault(x => x.Id == id) == null)
+            if (_context.TimeMateUsers.SingleOrDefault(x => x.Id == Id) == null)
             {
                 return NotFound();
             }
-            if (_context.Projects.SingleOrDefault(x => x.ProjectId == id2) == null)
+            if (_context.Projects.SingleOrDefault(x => x.projectId == id2) == null)
             {
                 return NotFound();
             }
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var totalTimeSheets = _context.TimeSheets.Where(x => x.EmployeeId == userid && x.ProjectId == id2).ToList();
+            var totalTimeSheets = _context.TimeSheets.Where(x => x.EmployeeId == userid && x.projectId == id2).ToList();
             foreach (var a in totalTimeSheets)
             {
-                if (a.Status == "Saved")
+                if (a.status == "Saved")
                 {
                     var timeSheet = _context.TimeSheets.SingleOrDefault(x => x.TimeSheetId == a.TimeSheetId);
-                    timeSheet.Status = "Submitted";
+                    timeSheet.status = "Submitted";
                     _context.SaveChanges();
                 }
             }
@@ -1003,17 +1050,17 @@ namespace TimeMate.Controllers
 
         [Authorize(Roles = "Manager")]
         //Accept or Reject Timesheet
-        //AcceptOrRejectTimesheet/IndividualId/ProjectId
-        public IActionResult AcceptOrRejectTimesheet(string id, int id2)
+        //AcceptOrRejectTimesheet/individualId/projectId
+        public IActionResult AcceptOrRejectTimesheet(string Id, int id2)
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid);
             ViewBag.WorkspaceId = workspace.WorkspaceId;
             ViewBag.Name = workspace.Name;
-            var totalTimesheets = _context.TimeSheets.Where(x => x.EmployeeId == id && x.ProjectId == id2 && x.Status == "Submitted").ToList();
+            var totalTimesheets = _context.TimeSheets.Where(x => x.EmployeeId == Id && x.projectId == id2 && x.status == "Submitted").ToList();
             //accept or reject method
-            ViewBag.ProjectId = id2;
-            ViewBag.IndividualId = id;
+            ViewBag.projectId = id2;
+            ViewBag.individualId = Id;
 
             var list = new List<AcceptOrRejectTimesheetViewModel>();
             foreach (var a in totalTimesheets)
@@ -1053,12 +1100,12 @@ namespace TimeMate.Controllers
         }
 
         [Authorize(Roles = "Manager")]
-        //AcceptTimesheet/IndividualId/ProjectId
+        //AcceptTimesheet/individualId/projectId
 
 
-        public IActionResult AcceptTimesheet(string id, int id2)
+        public IActionResult AcceptTimesheet(string Id, int id2)
         {
-            if (id == null)
+            if (Id == null)
             {
                 return NotFound();
             }
@@ -1070,25 +1117,25 @@ namespace TimeMate.Controllers
             var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid);
             ViewBag.WorkspaceId = workspace.WorkspaceId;
             ViewBag.Name = workspace.Name;
-            var totalTimeSheets = _context.TimeSheets.Where(x => x.ProjectId == id2 && x.EmployeeId == id).ToList();
+            var totalTimeSheets = _context.TimeSheets.Where(x => x.projectId == id2 && x.EmployeeId == Id).ToList();
             foreach (var a in totalTimeSheets)
             {
-                if (a.Status == "Submitted")
+                if (a.status == "Submitted")
                 {
                     var timeSheet = _context.TimeSheets.SingleOrDefault(x => x.TimeSheetId == a.TimeSheetId);
-                    timeSheet.Status = "Accepetd";
+                    timeSheet.status = "Accepetd";
                     _context.SaveChanges();
                 }
             }
-            return RedirectToAction("AcceptOrRejectTimesheet", new { id = id, id2 = id2 });
+            return RedirectToAction("AcceptOrRejectTimesheet", new { Id = Id, id2 = id2 });
         }
 
         [Authorize(Roles = "Manager")]
-        //RejectTimesheet/IndividualId/ProjectId
+        //RejectTimesheet/individualId/projectId
 
-        public IActionResult RejectTimesheet(string id, int id2)
+        public IActionResult RejectTimesheet(string Id, int id2)
         {
-            if (id == null)
+            if (Id == null)
             {
                 return NotFound();
             }
@@ -1100,45 +1147,45 @@ namespace TimeMate.Controllers
             var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid);
             ViewBag.WorkspaceId = workspace.WorkspaceId;
             ViewBag.Name = workspace.Name;
-            var totalTimeSheets = _context.TimeSheets.Where(x => x.ProjectId == id2 && x.EmployeeId == id).ToList();
+            var totalTimeSheets = _context.TimeSheets.Where(x => x.projectId == id2 && x.EmployeeId == Id).ToList();
             foreach (var a in totalTimeSheets)
             {
-                if (a.Status == "Submitted")
+                if (a.status == "Submitted")
                 {
                     var timeSheet = _context.TimeSheets.SingleOrDefault(x => x.TimeSheetId == a.TimeSheetId);
-                    timeSheet.Status = "Rejected";
+                    timeSheet.status = "Rejected";
                     _context.SaveChanges();
                 }
             }
-            return RedirectToAction("AcceptOrRejectTimesheet", new { id = id, id2 = id2 });
+            return RedirectToAction("AcceptOrRejectTimesheet", new { Id = Id, id2 = id2 });
         }
 
         [Authorize(Roles = "Employee")]
-        //RequestToChangeProject/ProjectId
-        public IActionResult RequestToChangeProject(int id)
+        //RequestToChangeProject/projectId
+        public IActionResult RequestToChangeProject(int Id)
         {
-            if (id == 0)
+            if (Id == 0)
             {
                 return NotFound();
             }
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (_context.ChangeProjectRequests.Any(x => x.ProjectId == id && x.IndividualId == userid))
+            if (_context.ChangeProjectRequests.Any(x => x.projectId == Id && x.individualId == userid))
             {
                 //don't do this;
                 return RedirectToAction("ChangeProjectRequests");
             }
             else
             {
-                if (_context.ProjectAssignment.SingleOrDefault(x => x.EmployeeId == userid && x.ProjectId == id) == null)
+                if (_context.ProjectAssignment.SingleOrDefault(x => x.EmployeeId == userid && x.projectId == Id) == null)
                 {
                     return NotFound();
                 }
                 else
                 {
                     var requestToChangeProject = new ChangeProjectRequests();
-                    requestToChangeProject.ProjectId = id;
-                    requestToChangeProject.IndividualId = userid;
-                    requestToChangeProject.Status = "Request Sent";
+                    requestToChangeProject.projectId = Id;
+                    requestToChangeProject.individualId = userid;
+                    requestToChangeProject.status = "Request Sent";
                     _context.ChangeProjectRequests.Add(requestToChangeProject);
                     _context.SaveChanges();
                     return RedirectToAction("ChangeProjectRequests");
@@ -1155,12 +1202,12 @@ namespace TimeMate.Controllers
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             foreach (var a in totalRequests)
             {
-                if (a.IndividualId == userid)
+                if (a.individualId == userid)
                 {
                     var request = new RequestsListViewModel();
-                    request.ProjectName = _context.Projects.SingleOrDefault(x => x.ProjectId == a.ProjectId).Name;
-                    request.ProjectDescription = _context.Projects.SingleOrDefault(x => x.ProjectId == a.ProjectId).Description;
-                    request.Status = _context.ChangeProjectRequests.SingleOrDefault(x => x.ChangeProjectRequestId == a.ChangeProjectRequestId).Status;
+                    request.ProjectName = _context.Projects.SingleOrDefault(x => x.projectId == a.projectId).Name;
+                    request.ProjectDescription = _context.Projects.SingleOrDefault(x => x.projectId == a.projectId).description;
+                    request.status = _context.ChangeProjectRequests.SingleOrDefault(x => x.changeProjectRequestId == a.changeProjectRequestId).status;
                     requestList.Add(request);
                 }
             }
@@ -1180,29 +1227,29 @@ namespace TimeMate.Controllers
             foreach (var a in totalRequests)
             {
                 if (_context.Workspaces.SingleOrDefault(x => x.WorkspaceId ==
-                                _context.Projects.SingleOrDefault(y => y.ProjectId == a.ProjectId).WorkspaceId).PmId == userid)
+                                _context.Projects.SingleOrDefault(y => y.projectId == a.projectId).WorkspaceId).PmId == userid)
                 {
-                    if (a.Status == "Request Sent")
+                    if (a.status == "Request Sent")
                     {
                         var request = new RequestsListViewModel();
-                        request.ProjectName = _context.Projects.SingleOrDefault(x => x.ProjectId == a.ProjectId).Name;
-                        request.ProjectDescription = _context.Projects.SingleOrDefault(x => x.ProjectId == a.ProjectId).Description;
-                        request.Status = "Incomming Request";
-                        request.Member = _context.TimeMateUsers.SingleOrDefault(x => x.Id == a.IndividualId).Email;
-                        request.ProjectId = a.ProjectId;
-                        request.RequestId = a.ChangeProjectRequestId;
+                        request.ProjectName = _context.Projects.SingleOrDefault(x => x.projectId == a.projectId).Name;
+                        request.ProjectDescription = _context.Projects.SingleOrDefault(x => x.projectId == a.projectId).description;
+                        request.status = "Incomming Request";
+                        request.Member = _context.TimeMateUsers.SingleOrDefault(x => x.Id == a.individualId).Email;
+                        request.projectId = a.projectId;
+                        request.RequestId = a.changeProjectRequestId;
                         request.CanChange = true; // Set the CanChange property to true
                         ViewBag.CanChange = true;
                         requestList.Add(request);
                     }
-                    else if (a.Status == "Accepted")
+                    else if (a.status == "Accepted")
                     {
                         var request = new RequestsListViewModel();
-                        request.ProjectName = _context.Projects.SingleOrDefault(x => x.ProjectId == a.ProjectId).Name;
-                        request.ProjectDescription = _context.Projects.SingleOrDefault(x => x.ProjectId == a.ProjectId).Description;
-                        request.Status = "Accepted";
-                        request.Member = _context.TimeMateUsers.SingleOrDefault(x => x.Id == a.IndividualId).Email;
-                        request.CanChange = false; // Set the CanChange property to false for not changing project
+                        request.ProjectName = _context.Projects.SingleOrDefault(x => x.projectId == a.projectId).Name;
+                        request.ProjectDescription = _context.Projects.SingleOrDefault(x => x.projectId == a.projectId).description;
+                        request.status = "Accepted";
+                        request.Member = _context.TimeMateUsers.SingleOrDefault(x => x.Id == a.individualId).Email;
+                        request.CanChange = false; // Set the CanChange property to false for not changing Project
                         ViewBag.CanChange = false;
                         requestList.Add(request);
                     }
@@ -1213,17 +1260,17 @@ namespace TimeMate.Controllers
 
         [Authorize(Roles = "Manager")]
         //View The Productivity of Employees
-        //ProductivityOfEmployee/ProjectId
-        public IActionResult ProductivityOfEmployee(int id, ProductivityViewModel model)
+        //ProductivityOfEmployee/projectId
+        public IActionResult ProductivityOfEmployee(int Id, ProductivityViewModel model)
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var workspace = _context.Workspaces.SingleOrDefault(x => x.PmId == userid);
             ViewBag.WorkspaceId = workspace.WorkspaceId;
             ViewBag.Name = workspace.Name;
-            var totalTimesheet = _context.TimeSheets.Where(x => x.Status == "Accepetd" && x.ProjectId == id).ToList();
+            var totalTimesheet = _context.TimeSheets.Where(x => x.status == "Accepetd" && x.projectId == Id).ToList();
             var productivityList = new List<ProductivityViewModel>();
             //get timesheets with different ids
-            var listOfDifferentIds = _context.TimeSheets.Where(x => x.ProjectId == id).GroupBy(t => t.EmployeeId).Select(g => g.First()).ToList();
+            var listOfDifferentIds = _context.TimeSheets.Where(x => x.projectId == Id).GroupBy(t => t.EmployeeId).Select(g => g.First()).ToList();
             foreach (var a in listOfDifferentIds)
             {
                 var countHours = 0;
@@ -1245,11 +1292,11 @@ namespace TimeMate.Controllers
             return View(productivityList);
         }
         //Change Project
-        //ChangeProject/ProjectId
-        public IActionResult ChangeProject(int id, int id2)
+        //ChangeProject/projectId
+        public IActionResult ChangeProject(int Id, int id2)
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (id == 0)
+            if (Id == 0)
             {
                 return NotFound();
             }
@@ -1257,31 +1304,31 @@ namespace TimeMate.Controllers
             {
                 return NotFound();
             }
-            if (_context.Projects.SingleOrDefault(x => x.ProjectId == id && x.WorkspaceId == _context.Workspaces.SingleOrDefault(y => y.PmId == userid).WorkspaceId) == null)
+            if (_context.Projects.SingleOrDefault(x => x.projectId == Id && x.WorkspaceId == _context.Workspaces.SingleOrDefault(y => y.PmId == userid).WorkspaceId) == null)
             {
                 return NotFound();
             }
-            if (_context.ChangeProjectRequests.SingleOrDefault(x => x.ChangeProjectRequestId == id2) == null)
+            if (_context.ChangeProjectRequests.SingleOrDefault(x => x.changeProjectRequestId == id2) == null)
             {
                 return NotFound();
             }
-            var project = _context.Projects.SingleOrDefault(x => x.ProjectId == id && x.WorkspaceId == _context.Workspaces.SingleOrDefault(y => y.PmId == userid).WorkspaceId);
+            var Project = _context.Projects.SingleOrDefault(x => x.projectId == Id && x.WorkspaceId == _context.Workspaces.SingleOrDefault(y => y.PmId == userid).WorkspaceId);
             ViewBag.WorkspaceId = _context.Workspaces.SingleOrDefault(y => y.PmId == userid).WorkspaceId;
             ViewBag.Name = _context.Workspaces.SingleOrDefault(y => y.PmId == userid).Name;
             var p = new ChangeProjectViewModel();
-            p.ProjectName = project.Name;
-            p.Description = project.Description;
+            p.ProjectName = Project.Name;
+            p.description = Project.description;
             return View(p);
         }
         [HttpPost]
-        public IActionResult ChangeProject(int id, int id2, ChangeProjectViewModel model)
+        public IActionResult ChangeProject(int Id, int id2, ChangeProjectViewModel model)
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (_context.Projects.SingleOrDefault(x => x.ProjectId == id && x.WorkspaceId == _context.Workspaces.SingleOrDefault(y => y.PmId == userid).WorkspaceId) == null)
+            if (_context.Projects.SingleOrDefault(x => x.projectId == Id && x.WorkspaceId == _context.Workspaces.SingleOrDefault(y => y.PmId == userid).WorkspaceId) == null)
             {
                 return NotFound();
             }
-            if (_context.ChangeProjectRequests.SingleOrDefault(x => x.ChangeProjectRequestId == id2) == null)
+            if (_context.ChangeProjectRequests.SingleOrDefault(x => x.changeProjectRequestId == id2) == null)
             {
                 return NotFound();
             }
@@ -1296,13 +1343,13 @@ namespace TimeMate.Controllers
                 }
                 else
                 {
-                    var project = _context.Projects.SingleOrDefault(x => x.ProjectId == id);
-                    project.Name = model.ProjectName;
-                    project.Description = model.Description;
-                    _context.Projects.Update(project);
+                    var Project = _context.Projects.SingleOrDefault(x => x.projectId == Id);
+                    Project.Name = model.ProjectName;
+                    Project.description = model.description;
+                    _context.Projects.Update(Project);
                     _context.SaveChanges();
-                    var request = _context.ChangeProjectRequests.SingleOrDefault(x => x.ChangeProjectRequestId == id2);
-                    request.Status = "Accepted";
+                    var request = _context.ChangeProjectRequests.SingleOrDefault(x => x.changeProjectRequestId == id2);
+                    request.status = "Accepted";
                     _context.ChangeProjectRequests.Update(request);
                     _context.SaveChanges();
                     return RedirectToAction("ChangeProjectRequestsPm");
@@ -1329,7 +1376,7 @@ namespace TimeMate.Controllers
         public IActionResult ExportTasks()
         {
             var tasks = _context.Tasks.ToList();
-            var fileContents = "Id,Name,Description,EmployeeId,EmployeeName,Deadline,Priority,IsCompleted\n";
+            var fileContents = "Id,Name,description,EmployeeId,EmployeeName,Deadline,Priority,IsCompleted\n";
             foreach (var task in tasks)
             {
                 fileContents += $"{task.TaskId},{task.TaskName},{task.WorkspaceId},{task.Workspace}\n";
@@ -1343,37 +1390,45 @@ namespace TimeMate.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ImportTasks(IFormFile importFile)
         {
-            if (importFile == null || importFile.Length == 0)
-            {
-                ModelState.AddModelError("File", "Please select a file");
-                return RedirectToAction(nameof(DailyTimesheets));
-            }
-
-            if (importFile.FileName.EndsWith(".csv") == false)
-            {
-                ModelState.AddModelError("File", "Invalid file format");
-                return RedirectToAction(nameof(DailyTimesheets));
-            }
-
             try
             {
+                if (importFile == null || importFile.Length == 0)
+                {
+                    ModelState.AddModelError("File", "Please select a file");
+                    return RedirectToAction(nameof(DailyTimesheets));
+                }
+
+                if (!importFile.FileName.EndsWith(".csv"))
+                {
+                    ModelState.AddModelError("File", "Invalid file format");
+                    return RedirectToAction(nameof(DailyTimesheets));
+                }
+
                 using (var streamReader = new StreamReader(importFile.OpenReadStream()))
                 {
                     string line;
                     while ((line = await streamReader.ReadLineAsync()) != null)
                     {
                         string[] values = line.Split(',');
+
+                        // Ensure the values array has the expected length
                         if (values.Length == 8)
                         {
-                            Tasks task = new Tasks
+                            if (int.TryParse(values[3], out int taskId) && int.TryParse(values[7], out int workspaceId))
                             {
-
-
-                                TaskId = int.Parse(values[3]),
-                                TaskName = values[2],
-                                WorkspaceId = int.Parse(values[3]),
-                            };
-                            _context.Tasks.Add(task);
+                                Tasks task = new Tasks
+                                {
+                                    TaskId = taskId,
+                                    TaskName = values[2],
+                                    WorkspaceId = workspaceId,
+                                };
+                                _context.Tasks.Add(task);
+                            }
+                            else
+                            {
+                                // Log or handle parsing errors
+                                ModelState.AddModelError("File", "Error parsing TaskId or WorkspaceId");
+                            }
                         }
                     }
                 }
@@ -1383,10 +1438,13 @@ namespace TimeMate.Controllers
             }
             catch (Exception ex)
             {
+                // Log the exception for further investigation
+                Console.WriteLine($"Exception during file import: {ex}");
                 ModelState.AddModelError("File", "Error importing file: " + ex.Message);
                 return RedirectToAction(nameof(DailyTimesheets));
             }
         }
+
         private static List<Message> _messages = new List<Message>();
 
         // GET: /Message/
@@ -1420,9 +1478,9 @@ namespace TimeMate.Controllers
         }
 
         // GET: /Message/Details/5
-        public IActionResult MessageDetails(int id)
+        public IActionResult MessageDetails(int Id)
         {
-            var message = _messages.FirstOrDefault(m => m.Id == id);
+            var message = _messages.FirstOrDefault(m => m.Id == Id);
             if (message == null)
             {
                 return NotFound();
@@ -1432,9 +1490,9 @@ namespace TimeMate.Controllers
         }
 
         // GET: /Message/Archive/5
-        public IActionResult Archive(int id)
+        public IActionResult Archive(int Id)
         {
-            var message = _messages.FirstOrDefault(m => m.Id == id);
+            var message = _messages.FirstOrDefault(m => m.Id == Id);
             if (message == null)
             {
                 return NotFound();
@@ -1442,9 +1500,9 @@ namespace TimeMate.Controllers
             message.IsArchived = true;
             return RedirectToAction(nameof(MessageIndex));
         }
-        public IActionResult UnArchive(int id)
+        public IActionResult UnArchive(int Id)
         {
-            var message = _messages.FirstOrDefault(m => m.Id == id);
+            var message = _messages.FirstOrDefault(m => m.Id == Id);
             if (message != null)
             {
                 message.IsArchived = false;
@@ -1461,15 +1519,15 @@ namespace TimeMate.Controllers
         }
 
         // GET: Permission/Details/5
-        public async Task<IActionResult> PermissionDetails(int? id)
+        public async Task<IActionResult> PermissionDetails(int? Id)
         {
-            if (id == null || _context.Permission == null)
+            if (Id == null || _context.Permission == null)
             {
                 return NotFound();
             }
 
             var permission = await _context.Permission
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == Id);
             if (permission == null)
             {
                 return NotFound();
@@ -1488,7 +1546,7 @@ namespace TimeMate.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PermissionCreate([Bind("Id,Name,Description")] Permission permission)
+        public async Task<IActionResult> PermissionCreate([Bind("Id,Name,description")] Permission permission)
         {
             if (ModelState.IsValid)
             {
@@ -1500,14 +1558,14 @@ namespace TimeMate.Controllers
         }
 
         // GET: Permission/Edit/5
-        public async Task<IActionResult> PermissionEdit(int? id)
+        public async Task<IActionResult> PermissionEdit(int? Id)
         {
-            if (id == null || _context.Permission == null)
+            if (Id == null || _context.Permission == null)
             {
                 return NotFound();
             }
 
-            var permission = await _context.Permission.FindAsync(id);
+            var permission = await _context.Permission.FindAsync(Id);
             if (permission == null)
             {
                 return NotFound();
@@ -1519,9 +1577,9 @@ namespace TimeMate.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PermissionEdit(int id, [Bind("Id,Name,Description")] Permission permission)
+        public async Task<IActionResult> PermissionEdit(int Id, [Bind("Id,Name,description")] Permission permission)
         {
-            if (id != permission.Id)
+            if (Id != permission.Id)
             {
                 return NotFound();
             }
@@ -1550,15 +1608,15 @@ namespace TimeMate.Controllers
         }
 
         // GET: Permission/Delete/5
-        public async Task<IActionResult> PermissionDelete(int? id)
+        public async Task<IActionResult> PermissionDelete(int? Id)
         {
-            if (id == null || _context.Permission == null)
+            if (Id == null || _context.Permission == null)
             {
                 return NotFound();
             }
 
             var permission = await _context.Permission
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == Id);
             if (permission == null)
             {
                 return NotFound();
@@ -1570,13 +1628,13 @@ namespace TimeMate.Controllers
         // POST: Permission/Delete/5
         [HttpPost, ActionName("PermissionDelete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PermissionDeleteConfirmed(int id)
+        public async Task<IActionResult> PermissionDeleteConfirmed(int Id)
         {
             if (_context.Permission == null)
             {
                 return Problem("Entity set 'ProjectContext.Permission'  is null.");
             }
-            var permission = await _context.Permission.FindAsync(id);
+            var permission = await _context.Permission.FindAsync(Id);
             if (permission != null)
             {
                 _context.Permission.Remove(permission);
@@ -1586,9 +1644,9 @@ namespace TimeMate.Controllers
             return RedirectToAction(nameof(PermissionIndex));
         }
 
-        private bool PermissionExists(int id)
+        private bool PermissionExists(int Id)
         {
-            return (_context.Permission?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Permission?.Any(e => e.Id == Id)).GetValueOrDefault();
         }
 
         public IActionResult DashBoard()
@@ -1630,6 +1688,25 @@ namespace TimeMate.Controllers
         }
 
 
+        public ActionResult Index()
+        {
+            return View();
+        }
 
+        // API endpoint to retrieve timesheet events data in JSON format
+        public ActionResult GetTimesheetEvents()
+        {
+            var timesheetEvents = _context.TimeSheets
+                .Select(e => new
+                {
+                    Id = e.TimeSheetId,
+                    title = e.Task,
+                    start = e.Date.ToString("yyyy-MM-dd"),
+                    color = e.status == "Completed" ? "Green" : "Red"
+                })
+                .ToList();
+
+            return Json(timesheetEvents);
+        }
     }
 }

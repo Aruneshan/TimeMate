@@ -15,9 +15,9 @@ namespace TimeMate.Models
     {
         [Key]
         public int ProjectAssignmentId { get; set; }
-        public string Status { get; set; }  
+        public string status { get; set; }  
         [ForeignKey("Project")]
-        public int ProjectId { get; set; }
+        public int projectId { get; set; }
         public Project Project { get; set; }
 
         [ForeignKey("TimeMateUser")]

@@ -16,7 +16,7 @@ namespace TimeMate.Models
         public string EndDay { get; set; }
         [Display(Name = "Start Date")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
-        public DateTime StartDate { get; set; }
+        public DateTime startDate { get; set; }
 
         [ForeignKey("WorkSpace")]
         public int WorkspaceId { get; set; }

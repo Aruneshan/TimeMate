@@ -7,7 +7,7 @@ else if (User.IsInRole("Manager"))
 {
     Layout = "~/Views/Shared/_SidebarManagerPartial.cshtml";
 }
-else if (User.IsInRole("Employee"))
+else if (User.IsInRole("employee"))
 {
     Layout = "~/Views/Shared/_SidebarEmployeePartial.cshtml";
 }
@@ -45,3 +45,9 @@ else if (User.IsInRole("Employee"))
         <button type="submit" class="btn btn-primary">Save</button>
     </div>
 </form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -9,7 +9,7 @@
     {
         Layout = "~/Views/Layouts/_AdminLayout.cshtml";
     }
-    else if (User.IsInRole("Employee"))
+    else if (User.IsInRole("employee"))
     {
         Layout = "~/Views/Layouts/_EmployeeLayout.cshtml";
     }
@@ -21,11 +21,11 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Employee Name</th>
+            <th>employee Name</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Reason</th>
-            <th>Status</th>
+            <th>status</th>
             <th>Manager Approval</th>
             <th></th>
         </tr>
@@ -34,9 +34,9 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Employee.FirstName</td>
-                <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
-                <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                <td>@item.employee.FirstName</td>
+                <td>@Html.DisplayFor(modelItem => item.startDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.endDate)</td>
                 <td>@Html.DisplayFor(modelItem => item.Reason)</td>
                 <td>
                     @if (item.ManagerApproval == LeaveStatus.Pending)
@@ -56,15 +56,20 @@
                 <td>
                     @if (User.IsInRole("Manager") && item.ManagerApproval == LeaveStatus.Pending)
                     {
-                        <a asp-action="Approve" asp-route-id="@item.Id">Approve</a>
-                        <a asp-action="Reject" asp-route-id="@item.Id">Reject</a>
+                        <form asp-action="Approve" asp-route-Id="@item.Id" method="post">
+                            <button type="submit" class="btn btn-success">Approve</button>
+                        </form>
+                        <br/>
+                        <form asp-action="Reject" asp-route-Id="@item.Id" method="post">
+                            <button type="submit" class="btn btn-danger">Reject</button>
+                        </form>
                     }
                     else
                     {
                         <span class="text-muted">N/A</span>
                     }
                 </td>
-            </tr>
+                </tr>
         }
     </tbody>
 </table>

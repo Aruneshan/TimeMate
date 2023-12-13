@@ -14,7 +14,7 @@ namespace TimeMate.Models
         public string Name { get; set; }
 
         [StringLength(255)]
-        public string Description { get; set; }
+        public string description { get; set; }
         public string RequestedBy { get; set; }
         public DateTime RequestedDate { get; set; }
         public string ApprovedBy { get; set; }

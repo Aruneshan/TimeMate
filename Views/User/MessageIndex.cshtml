@@ -1,83 +1,99 @@
 ﻿@model IEnumerable<Message>
 
-<h2>Messages</h2>
-<form asp-action="MessageIndex" method="post">
-<p>
-    <a asp-action="MessageCreate">Create New</a>
-</p>
+@{
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Subject)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SentDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SenderEmail)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RecipientEmail)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsRead)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsArchived)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var message in Model)
-        {
-            <tr>
-                <td>
-                    @if (!message.IsRead)
-                    {
-                        <b>@Html.DisplayFor(modelItem => message.Subject)</b>
-                    }
-                    else
-                    {
-                        @Html.DisplayFor(modelItem => message.Subject)
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => message.SentDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => message.SentDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => message.RecipientEmail)
-                </td>
-                <td>
-                    @if (message.IsRead)
-                    {
-                        <span class="text-success">Yes</span>
-                    }
-                    else
-                    {
-                        <span class="text-warning">No</span>
-                    }
-                </td>
-                <td>
-                    @if (message.IsArchived)
-                    {
-                        <span class="text-muted">Yes</span>
-                    }
-                    else
-                    {
-                        <span class="text-warning">No</span>
-                    }
-                </td>
-                <td>
-                    <a asp-action="MessageDetails" asp-route-id="@message.Id">Details</a> |
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-</form>
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Layouts/_AdminLayout.cshtml";
+    }
+    else if (User.IsInRole("employee"))
+    {
+        Layout = "~/Views/Layouts/_EmployeeLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Layouts/_ManagerLayout.cshtml";
+    }
+}
+<div>
+    <form asp-action="MessageIndex" method="post">
+        <p>
+            <a asp-action="MessageCreate">Create New</a>
+        </p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Subject)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SentDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SenderEmail)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.RecipientEmail)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsRead)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsArchived)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var message in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!message.IsRead)
+                            {
+                                <b>@Html.DisplayFor(modelItem => message.Subject)</b>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => message.Subject)
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => message.SentDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => message.SentDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => message.RecipientEmail)
+                        </td>
+                        <td>
+                            @if (message.IsRead)
+                            {
+                                <span class="text-success">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="text-warning">No</span>
+                            }
+                        </td>
+                        <td>
+                            @if (message.IsArchived)
+                            {
+                                <span class="text-muted">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="text-warning">No</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="MessageDetails" asp-route-Id="@message.Id">Details</a> |
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+</div>

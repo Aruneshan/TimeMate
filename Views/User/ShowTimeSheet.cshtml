@@ -7,7 +7,7 @@
 <div class="col-md-12">
 @if (@ViewBag.ProjectManagerId != null)
     {
-        @using (Html.BeginForm("SubmitTimeSheetToManager", "User", new { id = @ViewBag.ProjectManagerId, id2 = @ViewBag.projectId }))
+        @using (Html.BeginForm("SubmitTimeSheetToManager", "User", new { Id = @ViewBag.ProjectManagerId, id2 = @ViewBag.projectId }))
         {
             <input type="submit" style="margin-bottom:5px" class="btn btn-outline-dark float-right" value="Submit Timesheet" />
         }
@@ -35,7 +35,7 @@
                                     <th>Task</th>
                                     <th>Task Type</th>
                                     <th>Hours Spent</th>
-                                    <th>Status</th>
+                                    <th>status</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -47,9 +47,9 @@
                                         <td>@item.Task</td>
                                         <td>@item.TaskType</td>
                                         <td>@item.HoursSpent</td>
-                                        <td>@item.Status</td>
+                                        <td>@item.status</td>
                                         <td>
-                                            <a style="float:right" asp-action="EditTimeSheet" class="btn btn-primary" asp-route-id="@item.TimeSheetId">Edit</a>
+                                            <a style="float:right" asp-action="EditTimeSheet" class="btn btn-primary" asp-route-Id="@item.TimeSheetId">Edit</a>
                                         </td>
                                     </tr>
                                 }

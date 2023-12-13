@@ -15,6 +15,6 @@ namespace TimeMate.ViewModels
         public string EndDay { get; set; }
         [Display(Name = "Start Date")]
         [DataType(DataType.Date)]
-        public DateTime StartDate { get; set; }
+        public DateTime startDate { get; set; }
     }
 }
